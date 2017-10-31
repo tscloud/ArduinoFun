@@ -82,19 +82,24 @@ void setup() {
     display.clearDisplay();
     display.display();
 
-    //display.display();
-    //delay(2000);
+    /*
+    display.display();
+    delay(2000);
     // Clear the buffer.
-    //display.clearDisplay();
+    display.clearDisplay();
+    */
 
+    /*
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0,0);
     //display.clearDisplay();
-    //display.setTextSize(1);
-    //display.setCursor(0,0);
-    //display.clearDisplay();
-    //display.println("bme280_display test");
-    //display.display();
-    //delay(delayTime);
-    //display.clearDisplay();
+    display.println("for real?");
+    display.display();
+    delay(delayTime);
+    display.clearDisplay();
+    display.display();
+    */
 }
 
 
@@ -123,4 +128,15 @@ void printValues() {
     Serial.println(" %");
 
     Serial.println();
+
+    // -- display
+    //display.clearDisplay();
+    //display.display();
+    display.setTextSize(1);
+    display.setCursor(0,0);
+    display.println("Temperature");
+    display.println(bme.readTemperature());
+    display.display();
+    display.clearDisplay();
+    
 }
