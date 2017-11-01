@@ -23,14 +23,9 @@
 // --display
 #include <ESP_SSD1306.h>    // Modification of Adafruit_SSD1306 for ESP8266 compatibility
 #include <Adafruit_GFX.h>   // Needs a little change in original Adafruit library (See README.txt file)
-
-//#define BME_SCK 13
-//#define BME_MISO 12
-//#define BME_MOSI 11
-//#define BME_CS 10
+//#include <Fonts/FreeMono9pt7b.h>
 
 #define SEALEVELPRESSURE_HPA (1013.25)
-
 
 // --display
 // Pin definitions
@@ -39,13 +34,21 @@
 // digital pin
 #define BUTTON_PIN 12
 
+// sensor
 Adafruit_BME280 bme; // I2C
-//Adafruit_BME280 bme(BME_CS); // hardware SPI
-//Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK); // software SPI
 
 unsigned long delayTime;
 
 volatile int interruptDisplayInd = 0;
+
+// used for debounce
+long debouncing_time = 300; //Debouncing Time in Milliseconds
+volatile unsigned long last_micros;
+
+// --TEST
+int16_t xx1, yy1;
+uint16_t ww, hh;
+
 
 // --display
 ESP_SSD1306 display(OLED_RESET); // FOR I2C
@@ -70,58 +73,23 @@ void setup() {
     Serial.println("-- Default Test --");
     delayTime = 1000;
 
-    Serial.println();
-
     // --display
-    // SSD1306 Init
     display.begin(SSD1306_SWITCHCAPVCC);  // Switch OLED
 
+    // SSD1306 Init - this has to be done here or display will not output
     display.clearDisplay();
+    //display.setFont(&FreeMono9pt7b);
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Hello, world!");
-    //display.setTextColor(BLACK, WHITE); // 'inverted' text
-    //display.println(3.141592);
-    //display.setTextSize(2);
-    //display.setTextColor(WHITE);
-    //display.print("0x"); display.println(0xDEADBEEF, HEX);
     display.display();
     delay(2000);
     display.clearDisplay();
     display.display();
-
-    /*
-    display.display();
-    delay(2000);
-    // Clear the buffer.
-    display.clearDisplay();
-    */
-
-    /*
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(0,0);
-    //display.clearDisplay();
-    display.println("for real?");
-    display.display();
-    delay(delayTime);
-    display.clearDisplay();
-    display.display();
-    */
 }
 
 void loop() {
-    /*
-    printValues();
-    displayData("Temperature", (bme.readTemperature() * 9.0F)/5.0F + 32.0F);
-    delay(delayTime);
-    displayData("Pressure", bme.readPressure() / 100.0F);
-    delay(delayTime);
-    displayData("Humidity", bme.readHumidity());
-    delay(delayTime);
-    */
-    
     switch (interruptDisplayInd) {
       case 0:
         displayData("Temperature", (bme.readTemperature() * 9.0F)/5.0F + 32.0F);
@@ -142,14 +110,19 @@ void loop() {
 }
 
 void handleInterrupt() {
-  if(interruptDisplayInd >= 2) {
-    interruptDisplayInd = 0;
+  if((long)(micros() - last_micros) >= debouncing_time * 1000) {
+    // if we pass debounce -> do our thing
+    if(interruptDisplayInd >= 2) {
+      interruptDisplayInd = 0;
+    }
+    else {
+      interruptDisplayInd++;
+    }
+    Serial.print("Interupt received - value now: ");
+    Serial.println(interruptDisplayInd);
+
+    last_micros = micros();
   }
-  else {
-    interruptDisplayInd++;
-  }
-  Serial.print("Interupt received - value now: ");
-  Serial.println(interruptDisplayInd);
 }
  
 void printValues() {
@@ -173,25 +146,24 @@ void printValues() {
     Serial.println();  
 }
 
-void displayTemp() {
-    // -- display
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.println("Temperature");
-    display.println(bme.readTemperature());
-    display.display();
-    //display.clearDisplay();
-}
-
 void displayData(char *title, float value) {
     // -- display
+    // -- TEST
+    // Get the size of the bounding box to erase the old text
+    display.getTextBounds(title, 0, 0, &xx1, &yy1, &ww, &hh);
+    Serial.print("xx1:");  Serial.println(xx1);
+    Serial.print("yy1:");  Serial.println(yy1);
+    Serial.print("ww :");  Serial.println(ww);
+    Serial.print("hh :");  Serial.println(hh);
+
     display.clearDisplay();
-    display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0,0);
+    display.setTextSize(1);
     display.println(title);
+    
+    display.setCursor(0,16);
+    display.setTextSize(2);
     display.println(value);
     display.display();
     //display.clearDisplay();
