@@ -24,10 +24,10 @@
 #include <ESP_SSD1306.h>    // Modification of Adafruit_SSD1306 for ESP8266 compatibility
 #include <Adafruit_GFX.h>   // Needs a little change in original Adafruit library (See README.txt file)
 
-#define BME_SCK 13
-#define BME_MISO 12
-#define BME_MOSI 11
-#define BME_CS 10
+//#define BME_SCK 13
+//#define BME_MISO 12
+//#define BME_MOSI 11
+//#define BME_CS 10
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
@@ -36,11 +36,16 @@
 // Pin definitions
 #define OLED_RESET  16  // Pin 15 -RESET digital signal
 
+// digital pin
+#define BUTTON_PIN 12
+
 Adafruit_BME280 bme; // I2C
 //Adafruit_BME280 bme(BME_CS); // hardware SPI
 //Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO, BME_SCK); // software SPI
 
 unsigned long delayTime;
+
+volatile int interruptDisplayInd = 0;
 
 // --display
 ESP_SSD1306 display(OLED_RESET); // FOR I2C
@@ -48,6 +53,10 @@ ESP_SSD1306 display(OLED_RESET); // FOR I2C
 void setup() {
     Serial.begin(115200);
     Serial.println(F("BME280 test"));
+
+    // setup button interrupt
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleInterrupt, FALLING);
 
     bool status;
     
@@ -72,11 +81,11 @@ void setup() {
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Hello, world!");
-    display.setTextColor(BLACK, WHITE); // 'inverted' text
-    display.println(3.141592);
-    display.setTextSize(2);
-    display.setTextColor(WHITE);
-    display.print("0x"); display.println(0xDEADBEEF, HEX);
+    //display.setTextColor(BLACK, WHITE); // 'inverted' text
+    //display.println(3.141592);
+    //display.setTextSize(2);
+    //display.setTextColor(WHITE);
+    //display.print("0x"); display.println(0xDEADBEEF, HEX);
     display.display();
     delay(2000);
     display.clearDisplay();
@@ -102,13 +111,47 @@ void setup() {
     */
 }
 
-
-void loop() { 
+void loop() {
+    /*
     printValues();
+    displayData("Temperature", (bme.readTemperature() * 9.0F)/5.0F + 32.0F);
+    delay(delayTime);
+    displayData("Pressure", bme.readPressure() / 100.0F);
+    delay(delayTime);
+    displayData("Humidity", bme.readHumidity());
+    delay(delayTime);
+    */
+    
+    switch (interruptDisplayInd) {
+      case 0:
+        displayData("Temperature", (bme.readTemperature() * 9.0F)/5.0F + 32.0F);
+        break;
+      case 1:
+        displayData("Pressure", bme.readPressure() / 100.0F);
+        break;
+      case 2:
+        displayData("Humidity", bme.readHumidity());
+        break;
+      default:
+        Serial.print("Unhandled interrupt value: ");
+        Serial.println(interruptDisplayInd);
+        break;
+    }
+    
     delay(delayTime);
 }
 
-
+void handleInterrupt() {
+  if(interruptDisplayInd >= 2) {
+    interruptDisplayInd = 0;
+  }
+  else {
+    interruptDisplayInd++;
+  }
+  Serial.print("Interupt received - value now: ");
+  Serial.println(interruptDisplayInd);
+}
+ 
 void printValues() {
     Serial.print("Temperature = ");
     Serial.print(bme.readTemperature());
@@ -127,16 +170,29 @@ void printValues() {
     Serial.print(bme.readHumidity());
     Serial.println(" %");
 
-    Serial.println();
+    Serial.println();  
+}
 
+void displayTemp() {
     // -- display
-    //display.clearDisplay();
-    //display.display();
+    display.clearDisplay();
     display.setTextSize(1);
+    display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.println("Temperature");
     display.println(bme.readTemperature());
     display.display();
+    //display.clearDisplay();
+}
+
+void displayData(char *title, float value) {
+    // -- display
     display.clearDisplay();
-    
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(title);
+    display.println(value);
+    display.display();
+    //display.clearDisplay();
 }
