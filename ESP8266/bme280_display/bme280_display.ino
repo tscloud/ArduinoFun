@@ -39,7 +39,11 @@ Adafruit_BME280 bme; // I2C
 
 unsigned long delayTime;
 
+// used to determine which type of sensor data to display
 volatile int interruptDisplayInd = 0;
+
+// used for conversion of sensor value to string for centering
+char convBuffer[64];
 
 // used for debounce
 long debouncing_time = 300; //Debouncing Time in Milliseconds
@@ -148,22 +152,32 @@ void printValues() {
 
 void displayData(char *title, float value) {
     // -- display
-    // -- TEST
-    // Get the size of the bounding box to erase the old text
-    display.getTextBounds(title, 0, 0, &xx1, &yy1, &ww, &hh);
-    Serial.print("xx1:");  Serial.println(xx1);
-    Serial.print("yy1:");  Serial.println(yy1);
-    Serial.print("ww :");  Serial.println(ww);
-    Serial.print("hh :");  Serial.println(hh);
-
+    // Get the size of value to be displayed
+    //snprintf(convBuffer, 64, "%f", value);
+    itoa(value, convBuffer, 10);
+    
+    // -title
     display.clearDisplay();
     display.setTextColor(WHITE);
     display.setCursor(0,0);
     display.setTextSize(1);
     display.println(title);
-    
-    display.setCursor(0,16);
+
+    // -value
     display.setTextSize(2);
+    display.getTextBounds(convBuffer, 0, 0, &xx1, &yy1, &ww, &hh);
+    
+    // -- TEST
+    //Serial.print("Value :");  Serial.println(value);
+    //Serial.print("xx1:");  Serial.println(xx1);
+    //Serial.print("yy1:");  Serial.println(yy1);
+    //Serial.print("ww :");  Serial.println(ww);
+    //Serial.print("hh :");  Serial.println(hh);
+    //Serial.print("pad :");  Serial.println((display.width()-ww)/2);
+    //Serial.print("screen width :");  Serial.println(display.width());
+
+    // don't know why I need to sub an extra 35 to center text!!
+    display.setCursor((display.width()-ww-35)/2,16);
     display.println(value);
     display.display();
     //display.clearDisplay();
