@@ -49,10 +49,9 @@ char convBuffer[64];
 long debouncing_time = 300; //Debouncing Time in Milliseconds
 volatile unsigned long last_micros;
 
-// --TEST
+// --needed for text centering
 int16_t xx1, yy1;
 uint16_t ww, hh;
-
 
 // --display
 ESP_SSD1306 display(OLED_RESET); // FOR I2C
@@ -66,14 +65,14 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), handleInterrupt, FALLING);
 
     bool status;
-    
+
     // default settings
     status = bme.begin();
     if (!status) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }
-    
+
     Serial.println("-- Default Test --");
     delayTime = 1000;
 
@@ -109,7 +108,7 @@ void loop() {
         Serial.println(interruptDisplayInd);
         break;
     }
-    
+
     delay(delayTime);
 }
 
@@ -128,7 +127,7 @@ void handleInterrupt() {
     last_micros = micros();
   }
 }
- 
+
 void printValues() {
     Serial.print("Temperature = ");
     Serial.print(bme.readTemperature());
@@ -147,15 +146,15 @@ void printValues() {
     Serial.print(bme.readHumidity());
     Serial.println(" %");
 
-    Serial.println();  
+    Serial.println();
 }
 
 void displayData(char *title, float value) {
     // -- display
-    // Get the size of value to be displayed
+    // string value required to do getTextBounds -> convert float sensor value
     //snprintf(convBuffer, 64, "%f", value);
     itoa(value, convBuffer, 10);
-    
+
     // -title
     display.clearDisplay();
     display.setTextColor(WHITE);
@@ -165,8 +164,9 @@ void displayData(char *title, float value) {
 
     // -value
     display.setTextSize(2);
+    // Get the size of value to be displayed
     display.getTextBounds(convBuffer, 0, 0, &xx1, &yy1, &ww, &hh);
-    
+
     // -- TEST
     //Serial.print("Value :");  Serial.println(value);
     //Serial.print("xx1:");  Serial.println(xx1);
