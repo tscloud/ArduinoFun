@@ -39,7 +39,7 @@
 #define DISPLAY_TOGGLE_PIN 12
 #define LED_PIN 14
 #define SET_BUTTON_UP_PIN 13
-#define SET_BUTTON_DOWN_PIN 15
+#define SET_BUTTON_DOWN_PIN 2
 
 // sensor
 Adafruit_BME280 bme; // I2C
@@ -59,6 +59,12 @@ volatile unsigned long last_micros;
 // used for wifi
 const char* ssid     = "gopats";
 const char* password = "15courthouselane";
+
+// value (temp) & min/max
+int valueMin = 50;
+int valueMax = 80;
+int trackedValue = 65; //arbitrary default
+int valueThreath = 2;
 
 ESP8266WebServer server(80);
 
@@ -81,7 +87,11 @@ void setup() {
 
     // setup button interrupt
     pinMode(DISPLAY_TOGGLE_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(DISPLAY_TOGGLE_PIN), handleInterrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(DISPLAY_TOGGLE_PIN), handleInterruptDisplay, FALLING);
+    pinMode(SET_BUTTON_UP_PIN, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(SET_BUTTON_UP_PIN), handleInterruptValUp, FALLING);
+    pinMode(SET_BUTTON_DOWN_PIN, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(SET_BUTTON_DOWN_PIN), handleInterruptValDown, FALLING);
 
     // setup LED
     pinMode(LED_PIN, OUTPUT);
@@ -117,7 +127,33 @@ void setup() {
 void loop() {
 
     //--TEST LED
-    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    //digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+
+    // flip LED ON/OFF determined by temp & trackedValue
+    /*
+    if (tempToF(bme.readTemperature()) < trackedValue) {
+      if (!digitalRead(LED_PIN)) {
+        digitalWrite(LED_PIN, HIGH);
+      }
+    }
+    else {
+      if (digitalRead(LED_PIN)) {
+        digitalWrite(LED_PIN, LOW);
+      }
+    }
+    */
+
+    // if the heat is a on -> don't turn off until we get to threathhold above temp
+    if (digitalRead(LED_PIN) == HIGH) {
+      if (tempToF(bme.readTemperature()) > float(trackedValue + valueThreath)) {
+        digitalWrite(LED_PIN, LOW);
+      }
+    }
+    else {
+      if (tempToF(bme.readTemperature()) < float(trackedValue)) {
+        digitalWrite(LED_PIN, HIGH);
+      }
+    }
 
     // for webserver
     server.handleClient();
@@ -133,6 +169,9 @@ void loop() {
         displayData("Humidity", bme.readHumidity());
         break;
       case 3:
+        displayData("Termo Set", trackedValue);
+        break;
+      case 4:
         displayData("", -1);
         break;
       default:
@@ -140,9 +179,6 @@ void loop() {
         Serial.println(interruptDisplayInd);
         break;
     }
-
-    //--TEST LED
-    //digitalWrite(LED_PIN, LOW);
 
     delay(delayTime);
 }
@@ -157,17 +193,51 @@ float pressToMBar(float pressure) {
   return (pressure / 100.0F);
 }
 
-void handleInterrupt() {
+void handleInterruptDisplay() {
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
     // if we pass debounce -> do our thing
-    if(interruptDisplayInd >= 3) {
+    if(interruptDisplayInd >= 4) {
       interruptDisplayInd = 0;
     }
     else {
       interruptDisplayInd++;
     }
-    Serial.print("Interupt received - value now: ");
+    Serial.print("handleInterruptDisplay received - value now: ");
     Serial.println(interruptDisplayInd);
+
+    last_micros = micros();
+  }
+}
+
+void handleInterruptValDown() {
+  if((long)(micros() - last_micros) >= debouncing_time * 1000) {
+    // if we pass debounce -> do our thing
+    Serial.println("handleInterruptValDown received");
+    if (trackedValue <= valueMin) {
+      Serial.println("min value already reached");
+    }
+    else {
+      trackedValue--;
+    }
+    Serial.print("trackedValue: ");
+    Serial.println(trackedValue);
+
+    last_micros = micros();
+  }
+}
+
+void handleInterruptValUp() {
+  if((long)(micros() - last_micros) >= debouncing_time * 1000) {
+    // if we pass debounce -> do our thing
+    Serial.println("handleInterruptValUp received");
+    if (trackedValue >= valueMax) {
+      Serial.println("max value already reached");
+    }
+    else {
+      trackedValue++;
+    }
+    Serial.print("trackedValue: ");
+    Serial.println(trackedValue);
 
     last_micros = micros();
   }
@@ -237,8 +307,16 @@ void displayData(char *title, float value) {
 }
 
 void wifiSetup() {
-  // Connect to WiFi network
+
+  // set hostname
   WiFi.hostname("giniger");
+
+  // Setup as softAP
+  /*
+  Serial.println(WiFi.softAP("ESPsoftAP_01") ? "Ready" : "Failed!");
+  */
+
+  // Connect to WiFi network
   WiFi.begin(ssid, password);
   Serial.print("\n\r \n\rWorking to connect");
 
