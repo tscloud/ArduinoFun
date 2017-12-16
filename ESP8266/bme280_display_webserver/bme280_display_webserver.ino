@@ -65,6 +65,7 @@ int valueMin = 50;
 int valueMax = 80;
 int trackedValue = 65; //arbitrary default
 int valueThreath = 2;
+bool displayTrackedValue = false;
 
 ESP8266WebServer server(80);
 
@@ -130,19 +131,6 @@ void loop() {
     //digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 
     // flip LED ON/OFF determined by temp & trackedValue
-    /*
-    if (tempToF(bme.readTemperature()) < trackedValue) {
-      if (!digitalRead(LED_PIN)) {
-        digitalWrite(LED_PIN, HIGH);
-      }
-    }
-    else {
-      if (digitalRead(LED_PIN)) {
-        digitalWrite(LED_PIN, LOW);
-      }
-    }
-    */
-
     // if the heat is a on -> don't turn off until we get to threathhold above temp
     if (digitalRead(LED_PIN) == HIGH) {
       if (tempToF(bme.readTemperature()) > float(trackedValue + valueThreath)) {
@@ -158,26 +146,32 @@ void loop() {
     // for webserver
     server.handleClient();
 
-    switch (interruptDisplayInd) {
-      case 0:
-        displayData("Temperature", tempToF(bme.readTemperature()));
-        break;
-      case 1:
-        displayData("Pressure", pressToMBar(bme.readPressure()));
-        break;
-      case 2:
-        displayData("Humidity", bme.readHumidity());
-        break;
-      case 3:
-        displayData("Termo Set", trackedValue);
-        break;
-      case 4:
-        displayData("", -1);
-        break;
-      default:
-        Serial.print("Unhandled interrupt value: ");
-        Serial.println(interruptDisplayInd);
-        break;
+    if (displayTrackedValue) {
+      displayTrackedValue = false;
+      displayData("Termo Set", trackedValue);
+    }
+    else {
+      switch (interruptDisplayInd) {
+        case 0:
+          displayData("Temperature", tempToF(bme.readTemperature()));
+          break;
+        case 1:
+          displayData("Pressure", pressToMBar(bme.readPressure()));
+          break;
+        case 2:
+          displayData("Humidity", bme.readHumidity());
+          break;
+        case 3:
+          displayData("Termo Set", trackedValue);
+          break;
+        case 4:
+          displayData("", -1);
+          break;
+        default:
+          Serial.print("Unhandled interrupt value: ");
+          Serial.println(interruptDisplayInd);
+          break;
+      }
     }
 
     delay(delayTime);
@@ -223,6 +217,9 @@ void handleInterruptValDown() {
     Serial.println(trackedValue);
 
     last_micros = micros();
+
+    // display termo set on next loop iteration
+    displayTrackedValue = true;
   }
 }
 
@@ -240,6 +237,9 @@ void handleInterruptValUp() {
     Serial.println(trackedValue);
 
     last_micros = micros();
+
+    // display termo set on next loop iteration
+    displayTrackedValue = true;
   }
 }
 
