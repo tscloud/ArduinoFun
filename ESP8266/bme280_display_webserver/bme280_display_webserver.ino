@@ -44,7 +44,11 @@
 // sensor
 Adafruit_BME280 bme; // I2C
 
-unsigned long delayTime;
+unsigned const long delayTime = 1000;
+
+// used for blanking out screen after waiting for so long
+int blankoutCounter = 0;
+const int blankoutThresh = 3;
 
 // used to determine which type of sensor data to display
 volatile int interruptDisplayInd = 0;
@@ -53,7 +57,7 @@ volatile int interruptDisplayInd = 0;
 char convBuffer[64];
 
 // used for debounce
-long debouncing_time = 300; //Debouncing Time in Milliseconds
+const long debouncing_time = 300; //Debouncing Time in Milliseconds
 volatile unsigned long last_micros;
 
 // used for wifi
@@ -61,10 +65,10 @@ const char* ssid     = "gopats";
 const char* password = "15courthouselane";
 
 // value (temp) & min/max
-int valueMin = 50;
-int valueMax = 80;
-int trackedValue = 65; //arbitrary default
-int valueThreath = 2;
+const int valueMin = 50;
+const int valueMax = 80;
+const int trackedValue = 65; //arbitrary default
+const int valueThreth = 2;
 bool displayTrackedValue = false;
 
 ESP8266WebServer server(80);
@@ -102,12 +106,12 @@ void setup() {
     // default settings
     status = bme.begin();
     if (!status) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring!");
+        Serial.println(F("Could not find a valid BME280 sensor, check wiring!"));
         while (1);
     }
 
-    Serial.println("-- Default Test --");
-    delayTime = 1000;
+    Serial.println(F("-- Default Test --"));
+    //delayTime = 1000;
 
     // --display
     display.begin(SSD1306_SWITCHCAPVCC);  // Switch OLED
@@ -118,7 +122,7 @@ void setup() {
     display.setTextSize(1);
     display.setTextColor(WHITE);
     display.setCursor(0,0);
-    display.println("Hello, world!");
+    display.println(F("Hello, world!"));
     display.display();
     delay(2000);
     display.clearDisplay();
@@ -131,9 +135,9 @@ void loop() {
     //digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 
     // flip LED ON/OFF determined by temp & trackedValue
-    // if the heat is a on -> don't turn off until we get to threathhold above temp
+    // if the heat is a on -> don't turn off until we get to threthhold above temp
     if (digitalRead(LED_PIN) == HIGH) {
-      if (tempToF(bme.readTemperature()) > float(trackedValue + valueThreath)) {
+      if (tempToF(bme.readTemperature()) > float(trackedValue + valueThreth)) {
         digitalWrite(LED_PIN, LOW);
       }
     }
@@ -146,10 +150,17 @@ void loop() {
     // for webserver
     server.handleClient();
 
+    //maybe display tracked value (Temp)
     if (displayTrackedValue) {
       displayTrackedValue = false;
       displayData("Termo Set", trackedValue);
     }
+    //maybe blankout the screen
+    else if (blankoutCounter >= blankoutThresh){
+      displayData("", -1);
+      blankoutCounter = 0;
+    }
+    //display some data (or maybe blank out screen)
     else {
       switch (interruptDisplayInd) {
         case 0:
@@ -174,6 +185,7 @@ void loop() {
       }
     }
 
+    blankoutCounter++;
     delay(delayTime);
 }
 
@@ -309,7 +321,7 @@ void displayData(char *title, float value) {
 void wifiSetup() {
 
   // set hostname
-  WiFi.hostname("giniger");
+  WiFi.hostname(F("giniger"));
 
   // Setup as softAP
   /*
@@ -318,7 +330,7 @@ void wifiSetup() {
 
   // Connect to WiFi network
   WiFi.begin(ssid, password);
-  Serial.print("\n\r \n\rWorking to connect");
+  Serial.print(F("\n\r \n\rWorking to connect"));
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -326,10 +338,10 @@ void wifiSetup() {
     Serial.print(".");
   }
 
-  Serial.println("BME280 Environmental Display Server");
-  Serial.print("Connected to ");
+  Serial.println(F("BME280 Environmental Display Server"));
+  Serial.print(F("Connected to "));
   Serial.println(ssid);
-  Serial.print("IP address: ");
+  Serial.print(F("IP address: "));
   Serial.println(WiFi.localIP());
 
   // Set up mDNS responder:
@@ -366,7 +378,7 @@ h2 { text-align:center; font:normal 48px/0px helveticaneue-ultralight,sans-serif
   });
 
   server.begin();
-  Serial.println("HTTP server started");
+  Serial.println(F("HTTP server started"));
 
   // Add service to MDNS-SD
   //MDNS.addService("http", "tcp", 80);
