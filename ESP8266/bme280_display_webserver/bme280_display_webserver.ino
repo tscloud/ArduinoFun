@@ -92,7 +92,12 @@ int addr = 0;
 void setup() {
 
     EEPROM.begin(1);
-    trackedValue = EEPROM.read(addr);
+    byte readValue = EEPROM.read(addr);
+
+    //if something weird read from EEPROM -> set trackedValue to something sane
+    if ((readValue >= valueMin) && (readValue <= valueMax)) {
+      trackedValue = readValue;
+    }
 
     Serial.begin(115200);
     Serial.println(F("BME280 test"));
@@ -167,6 +172,8 @@ void loop() {
     }
     //maybe blankout the screen
     else if (blankoutCounter >= blankoutThresh){
+      //reset the blankoutCounter so we don't exceed int capacity
+      blankoutCounter = blankoutThresh;
       displayData("", -1);
     }
     //display some data (or maybe blank out screen)
@@ -211,15 +218,17 @@ float pressToMBar(float pressure) {
 
 void handleInterruptDisplay() {
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
-    // if we pass debounce -> do our thing
-    if(interruptDisplayInd >= 4) {
-      interruptDisplayInd = 0;
+    // if we pass debounce -> do our thing unless we're coming from a blanked screen
+    if (blankoutCounter < blankoutThresh) {
+      if(interruptDisplayInd >= 4) {
+        interruptDisplayInd = 0;
+      }
+      else {
+        interruptDisplayInd++;
+      }
+      Serial.print("handleInterruptDisplay received - value now: ");
+      Serial.println(interruptDisplayInd);
     }
-    else {
-      interruptDisplayInd++;
-    }
-    Serial.print("handleInterruptDisplay received - value now: ");
-    Serial.println(interruptDisplayInd);
 
     last_micros = micros();
 
