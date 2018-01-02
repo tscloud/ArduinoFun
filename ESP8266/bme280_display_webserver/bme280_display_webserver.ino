@@ -29,6 +29,9 @@
 #include <Adafruit_GFX.h>   // Needs a little change in original Adafruit library (See README.txt file)
 //#include <Fonts/FreeMono9pt7b.h>
 
+// --EEPROM
+#include <EEPROM.h>
+
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 // --display
@@ -64,11 +67,11 @@ volatile unsigned long last_micros;
 const char* ssid     = "gopats";
 const char* password = "15courthouselane";
 
-// value (temp) & min/max
-const int valueMin = 50;
-const int valueMax = 80;
-const int trackedValue = 65; //arbitrary default
-const int valueThreth = 2;
+// value (temp) & min/max <- use byte  - we're going to store trackedValue in EEPROM
+const byte valueMin = 50;
+const byte valueMax = 80;
+const byte valueThreth = 2;
+byte trackedValue = 65; //arbitrary default
 bool displayTrackedValue = false;
 
 ESP8266WebServer server(80);
@@ -83,7 +86,14 @@ uint16_t ww, hh;
 // --display
 ESP_SSD1306 display(OLED_RESET); // FOR I2C
 
+// --EEPROM
+int addr = 0;
+
 void setup() {
+
+    EEPROM.begin(1);
+    trackedValue = EEPROM.read(addr);
+
     Serial.begin(115200);
     Serial.println(F("BME280 test"));
 
@@ -158,7 +168,6 @@ void loop() {
     //maybe blankout the screen
     else if (blankoutCounter >= blankoutThresh){
       displayData("", -1);
-      blankoutCounter = 0;
     }
     //display some data (or maybe blank out screen)
     else {
@@ -186,6 +195,7 @@ void loop() {
     }
 
     blankoutCounter++;
+
     delay(delayTime);
 }
 
@@ -212,6 +222,9 @@ void handleInterruptDisplay() {
     Serial.println(interruptDisplayInd);
 
     last_micros = micros();
+
+    // reset blankoutCounter
+    blankoutCounter = 0;
   }
 }
 
@@ -224,6 +237,8 @@ void handleInterruptValDown() {
     }
     else {
       trackedValue--;
+      EEPROM.write(addr, trackedValue);
+      EEPROM.commit();
     }
     Serial.print("trackedValue: ");
     Serial.println(trackedValue);
@@ -232,6 +247,8 @@ void handleInterruptValDown() {
 
     // display termo set on next loop iteration
     displayTrackedValue = true;
+    // reset blankoutCounter
+    blankoutCounter = 0;
   }
 }
 
@@ -244,6 +261,8 @@ void handleInterruptValUp() {
     }
     else {
       trackedValue++;
+      EEPROM.write(addr, trackedValue);
+      EEPROM.commit();
     }
     Serial.print("trackedValue: ");
     Serial.println(trackedValue);
@@ -252,6 +271,8 @@ void handleInterruptValUp() {
 
     // display termo set on next loop iteration
     displayTrackedValue = true;
+    // reset blankoutCounter
+    blankoutCounter = 0;
   }
 }
 
