@@ -39,10 +39,10 @@
 #define OLED_RESET  16  // Pin 15 -RESET digital signal
 
 // digital pin
+#define LED_PIN 15
 #define DISPLAY_TOGGLE_PIN 12
-#define LED_PIN 14
 #define SET_BUTTON_UP_PIN 13
-#define SET_BUTTON_DOWN_PIN 2
+#define SET_BUTTON_DOWN_PIN 14
 
 // sensor
 Adafruit_BME280 bme; // I2C
@@ -115,6 +115,7 @@ void setup() {
 
     // setup LED
     pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN, LOW);
 
     bool status;
 
@@ -153,11 +154,13 @@ void loop() {
     // if the heat is a on -> don't turn off until we get to threthhold above temp
     if (digitalRead(LED_PIN) == HIGH) {
       if (tempToF(bme.readTemperature()) > float(trackedValue + valueThreth)) {
+        Serial.println(F("--TURN OFF--"));
         digitalWrite(LED_PIN, LOW);
       }
     }
     else {
       if (tempToF(bme.readTemperature()) < float(trackedValue)) {
+        Serial.println(F("--TURN ON--"));
         digitalWrite(LED_PIN, HIGH);
       }
     }
