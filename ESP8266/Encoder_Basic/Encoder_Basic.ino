@@ -12,17 +12,31 @@
 Encoder myEnc(13, 14);
 //   avoid using pins with LEDs attached
 
+long oldPosition  = -999;
+
+long bigPos = 0;
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Basic Encoder Test:");
 }
 
-long oldPosition  = -999;
-
 void loop() {
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
+    //Serial.println(newPosition);
+
+    if ((newPosition % 4) == 0) {
+      if (newPosition > oldPosition) {
+          bigPos += 1;
+      }
+      else {
+          bigPos -= 1;
+      }
+      Serial.print("bigPos: ");
+      Serial.println(bigPos);
+    }
+
     oldPosition = newPosition;
-    Serial.println(newPosition);
   }
 }
