@@ -51,7 +51,7 @@ unsigned const long delayTime = 1000;
 
 // used for blanking out screen after waiting for so long
 int blankoutCounter = 0;
-const int blankoutThresh = 3;
+const int blankoutThresh = 10;
 
 // used to determine which type of sensor data to display
 volatile int interruptDisplayInd = 0;
@@ -170,8 +170,8 @@ void loop() {
         Serial.print("bigPos: ");
         Serial.println(bigPos);
 
-        // in general, we are really only interested in whether the knob was turned to
-        //  either increase the value or decrease the value
+        // in general, we are really only interested in whether the knob
+        //  was turned to either increase the value or decrease the value
         encDirUp = true;
         if (newPosition < oldPosition) {
           encDirUp = false;
@@ -181,6 +181,9 @@ void loop() {
 
         // only do stuff if the screen is not blank
         if (blankoutCounter < blankoutThresh) {
+          // reset blankoutCounter every time we click encoder but only if
+          //  we have a non-blanc screen
+          blankoutCounter = 0;
           //do tracked value stuff
           if (displayTrackedValue) {
             if (encDirUp && (trackedValue < valueMax)) {
@@ -196,7 +199,7 @@ void loop() {
           }
           else {
             //do display toggle stuff
-            if(interruptDisplayInd >= 4) {
+            if(interruptDisplayInd >= 2) {
               interruptDisplayInd = 0;
             }
             else {
@@ -228,16 +231,15 @@ void loop() {
     // for webserver
     server.handleClient();
 
-    //maybe display tracked value (Temp)
-    if (displayTrackedValue) {
-      displayTrackedValue = false;
-      displayData("Termo Set", trackedValue);
-    }
-    //maybe blankout the screen
-    else if (blankoutCounter >= blankoutThresh){
+    //maybe blankout the screen - check this 1st
+    if (blankoutCounter >= blankoutThresh){
       //reset the blankoutCounter so we don't exceed int capacity
       blankoutCounter = blankoutThresh;
       displayData("", -1);
+    }
+    //maybe display tracked value (Temp)
+    else if (displayTrackedValue) {
+      displayData("Termo Set", trackedValue);
     }
     //display some data (or maybe blank out screen)
     else {
@@ -250,12 +252,6 @@ void loop() {
           break;
         case 2:
           displayData("Humidity", bme.readHumidity());
-          break;
-        case 3:
-          displayData("Termo Set", trackedValue);
-          break;
-        case 4:
-          displayData("", -1);
           break;
         default:
           Serial.print("Unhandled interrupt value: ");
@@ -290,8 +286,7 @@ void handleInterruptDisplay() {
       else {
         displayTrackedValue = true;
       }
-      Serial.print("handleInterruptDisplay received");
-      Serial.println(interruptDisplayInd);
+      Serial.println("handleInterruptDisplay received");
     }
 
     last_micros = micros();
