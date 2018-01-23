@@ -50,7 +50,7 @@ Adafruit_BME280 bme; // I2C
 unsigned const long delayTime = 1000;
 
 // used for blanking out screen after waiting for so long
-int blankoutCounter = 0;
+volatile int blankoutCounter = 0;
 const int blankoutThresh = 10;
 
 // used to determine which type of sensor data to display
@@ -72,7 +72,7 @@ const byte valueMin = 50;
 const byte valueMax = 80;
 const byte valueThreth = 2;
 byte trackedValue = 65; //arbitrary default
-bool displayTrackedValue = false;
+volatile bool displayTrackedValue = false;
 
 ESP8266WebServer server(80);
 
@@ -90,7 +90,7 @@ ESP_SSD1306 display(OLED_RESET); // FOR I2C
 int addr = 0;
 
 // --Rotary Encoder
-Encoder myEnc(13, 14);
+Encoder myEnc(SET_BUTTON_UP_PIN, SET_BUTTON_DOWN_PIN);
 
 long oldPosition  = -999;
 long newPosition = 0;
