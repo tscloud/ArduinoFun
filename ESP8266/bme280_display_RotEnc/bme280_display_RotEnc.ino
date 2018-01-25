@@ -115,7 +115,7 @@ void setup() {
 
     // setup button interrupt
     pinMode(DISPLAY_TOGGLE_PIN, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(DISPLAY_TOGGLE_PIN), handleInterruptDisplay, FALLING);
+    attachInterrupt(digitalPinToInterrupt(DISPLAY_TOGGLE_PIN), handleInterruptDisplay, RISING);
     //pinMode(SET_BUTTON_UP_PIN, INPUT_PULLUP);
     //attachInterrupt(digitalPinToInterrupt(SET_BUTTON_UP_PIN), handleInterruptValUp, FALLING);
     //pinMode(SET_BUTTON_DOWN_PIN, INPUT_PULLUP);
