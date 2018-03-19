@@ -5,6 +5,9 @@
 #define LED_PIN 15
 #define SENSOR_PIN 0 //analog pin 0
 
+//array length
+#define ARRAYSIZE 20
+
 // used for wifi
 const char* ssid     = "gopats";
 const char* password = "15courthouselane";
@@ -15,10 +18,11 @@ String webString = "";    // String to display
 float val = 0;
 float thresh = 70;
 int cyclesOn = 0;
+int sss = 0; //spurious sample set
 
 // eval stuff
-int evalArrayLen = 10;
-float evalArray[10];
+int evalArrayLen = ARRAYSIZE;
+float evalArray[ARRAYSIZE];
 int evalCtr = -1;
 float checkVal = 0;
 
@@ -57,80 +61,57 @@ void loop(){
   val = analogRead(SENSOR_PIN);
   delay(10);
 
-  Serial.print(evalCtr);
-  Serial.print(":");
+  //Serial.print(evalCtr);
+  //Serial.print(":");
   Serial.println(val);
 
   evalArray[evalCtr] = val;
 
 }
 
-/* cycle thru int array, throw out high & low, avg the rest */
 void processEval() {
 
+  int shortenedArrayLen = ARRAYSIZE-3;
+  float shortenedArray[ARRAYSIZE-3];
+
   float result = 0;
-/*
-  float high = 0;
-  float low = 0;
-  int highPos = 0;
-  int lowPos = 0;
 
-  high = evalArray[0];
-  low = evalArray[0];
-  highPos = 0;
-  lowPos = 0;
+  /* use QuickStat (thanks dndubins) to get mode <- better */
+  /*  eliminator of spurious readings -- but 1st eliminate */
+  /*  3 lowest values */
+  stats.bubbleSort(evalArray, evalArrayLen);
 
-  // find the high & low (skip 1st array entry)
-  for (int i = 1; i < evalArrayLen; ++i) {
-    if (evalArray[i] > high) {
-      high = evalArray[i];
-      highPos = i;
-    }
-    else if (evalArray[i] < low) {
-      low = evalArray[i];
-      lowPos = i;
-    }
+  for (int i = 3; i < evalArrayLen; ++i) {
+    shortenedArray[i-3] = evalArray[i];
+    Serial.print("s");
+    Serial.print(i-2);
+    Serial.print(":");
+    Serial.println(shortenedArray[i-2]);
   }
 
-  Serial.print("highPos:");
-  Serial.println(highPos);
-  Serial.print("lowPos:");
-  Serial.println(lowPos);
+  result = stats.mode(shortenedArray, shortenedArrayLen, 0.1);
+  Serial.print("mode: ");
+  Serial.println(result);
 
-  // if high & low are same => all the values are the same =>
-  //  don't bother avg-ing
-  if (highPos == lowPos) {
-    result = evalArray[0];
-  }
-  else {
-    // throw out high & low, avg the array
-    for (int i = 0; i < evalArrayLen; ++i) {
-      if ((i != highPos) && (i != lowPos)) {
-        result = result + evalArray[i];
+  // if mode == 0 => all values dissimilar => assume
+  //  spurious sample set
+  if (result != 0) {
+    // check to see if evel criteria met
+    if (result < thresh) {
+      if (digitalRead(LED_PIN) == LOW) {
+        digitalWrite(LED_PIN, HIGH);
+        // increment cycle on counter
+        cyclesOn++;
       }
     }
-    result = (result / (evalArrayLen - 2));
-  }
-
-  Serial.print("outlierless mean: ");
-  Serial.println(result);
-*/
-  result = stats.mode(evalArray,evalArrayLen,0.1);
-  Serial.print("outlierless mode: ");
-  Serial.println(result);
-
-  // check to see if evel criteria met
-  if (result < thresh) {
-    if (digitalRead(LED_PIN) == LOW) {
-      digitalWrite(LED_PIN, HIGH);
-      // increment cycle on counter
-      cyclesOn++;
+    else {
+      if (digitalRead(LED_PIN) == HIGH) {
+        digitalWrite(LED_PIN, LOW);
+      }
     }
   }
   else {
-    if (digitalRead(LED_PIN) == HIGH) {
-      digitalWrite(LED_PIN, LOW);
-    }
+    sss++;
   }
 }
 
@@ -187,6 +168,7 @@ h2 { text-align:center; font:normal 48px/0px helveticaneue-ultralight,sans-serif
 <body>\r\
 <h1>Voltage</h1>\r<h2>" + String(val, 2) + " mV</h2><br />" + "\r\
 <h1>Cycles On</h1>\r<h2>" + String(cyclesOn) + "</h2><br />" + "\r\
+<h1>Spurious Sample Set</h1>\r<h2>" + String(sss) + "</h2><br />" + "\r\
 </body>\r\
 </html>";
     server.send(200, "text/html", webString); // send to someone's browser when asked
