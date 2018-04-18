@@ -1,6 +1,7 @@
 Float Switch, side mounted horizontal (6) - Amazon
 Breadboard, mini, 170 pts (6) - Amazon
 Breadboard, 400 pts (2) - Amazon
+Breadboard, 830 pts (2) - Amazon
 Relay, DC -> AC (3), non-proto - Amazon
 Rotary Encoder (5) - Amazon
 Relay Interface Board - Amazon
@@ -9,7 +10,7 @@ Battery Holder, 23A (10) - Amazon
 Battery Holder, 9V clip (10) - Amazon
 USB Adapter, mini -> micro OTG (5) - Amazon
 Breadboard Power Supply, 3.3V/5V - Amazon
-FTDI Friend
+FTDI Friend - Amazon
 DC Power Jack Adapter, screw terminal -> male (5)/female (5) - Amazon
 ESP8266 ESP-12E Development Board (2) - Amazon
 ESP8266 ESP-01S (2) - FBA_FZ1082 - Amazon
@@ -21,11 +22,13 @@ DisplayPort to Mini DisplayPort Male to Female Adapter - Amazon
 HDMI to DisplayPort Converter Adapter with USB Power - Amazon
 Wireless Network Adapter, 802.11 B/G/N, Wireless USB, high gain antenna, 2W - Amazon
 Wireless Network Adapter, 802.11 n/g/b, Wireless USB, high gain antenna - Amazon
-Wireless Network Adapter, 802.11 n/g/b, Wireless USB - Amazon
+Wireless Network Adapter, 802.11 n/g/b, Wireless USB (3) - Amazon
 Soldering Station, Weller WES51 Analog - Amazon
 Solder, 44 Rosin Core 60/40,.031,1lb. Spool - Amazon
+Solder Tip Tinner - Amazon
 Solder Iron Tips, ETA/B/C/AA/BB/CC/R/T/S/KN (10) - Amazon
 Soldering Iron Tip Cleaning Wire Sponge With Brass Ball - Amazon
+Desoldering Wick, 2.5mm Width, 5' Length - Amazon
 UHF female SO239 to MCX male right angle Adapter - Amazon
 SMA male to MCX male right Adapter - Amazon
 RF Upconverter For Software Defined Radio, Ham It Up v1.3 - Amazon
@@ -43,22 +46,30 @@ Wire Stripper, crimper, AWG 10-24 - Amazon
 Optocoupler, transistor output, FOD852 (5) - Amazon
 Rocker Switch, SPST (5) - Amazon
 Slide Switch, Vertical, SPDT (10) - Amazon
+Toggle Switch, SPST (10) - Amazon
 Push Button, momentary, big red (10) - Amazon
-Push Button, momentary, mini black (100)
-PCB Femal Header, 1x40 (10) - Amazon
+Push Button, momentary, mini black (100+5) - Amazon
 AD/DA Converter Module, I2C, PCF8591 - Amazon
 ADC, 8-Channel 10-Bit, MCP3008, SPI - Amazon
-OLED LCD Module, 128X64, yellow/blue, I2C, ssd1306 - Amazon
+LCD OLED Module, 128 x 64, yellow/blue, I2C, ssd1306 - Amazon
+LCD Module 20 x 4, White on Blue, HD44780 - Amazon
 GPS Breakout, Adafruit 746 - Amazon
 ATTINY85 (2) - Amazon
 USB PC remote control, Sanoxy - Amazon
 Prototype strip board, 4"x10", 4000 hole (2) - Amazon
+Prototype board, 4x6cm, 280 tin-plated holes (5) - Amazon
 Capacitors, 0.1uF 50V Low Voltage Ceramic Disc (30) - Amazon
+Semiconductor Kit (320 Transistors & Diodes) - Amazon
+potentiometers, trimmer pots (15) (one each) 101(100Ω) - 504(500kΩ) - Amazon
 Bluetooth Receiver, HC-06, passcode 1234 - Amazon
-Bluetooth Adapter, USB
+Bluetooth Adapter, USB - Amazon
 DC-DC Buck Converter, 1.23V-30V, LM2596 - Amazon
 Fuse Holder, ATC blade inline (5) - Amazon
 Flex Cable for Raspberry Pi Camera - 24" / 610mm - Amazon
 Flex Cable for Raspberry Pi Camera - 4" / 100mm - Amazon
 3 Pins Poles PCB Screw Terminal Block Connector (5) - Amazon
 Ferrites, 13mm ID (5) - Amazon
+BMP180 Digital Barometric Pressure Sensor Breakout - Amazon
+HTU21D Humidity Sensor Breakout - Amazon
+Copper Heatsinks for Raspberry Pi and VGA RAM Memory Cooler (8) - Amazon
+LEDs, 5 Color Assorted, 5mm (25) - Amazon
