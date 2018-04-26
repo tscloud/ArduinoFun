@@ -5,8 +5,8 @@
 #define LED_PIN 15
 #define SENSOR_PIN 0 //analog pin 0
 
-//array length
-#define ARRAYSIZE 20
+#define ARRAYSIZE 20 //array length
+#define OLLEVEL 3 //outlier level
 
 // used for wifi
 const char* ssid     = "gopats";
@@ -15,9 +15,10 @@ const char* password = "15courthouselane";
 ESP8266WebServer server(80);
 String webString = "";    // String to display
 
-float val = 0;
-float thresh = 70;
-int cyclesOn = 0;
+float val = 0; //value read from sensor
+float thresh = 50; //threshold trigger - activate when sensor reads this or less
+float threshDiff = 10; //deactivate when sensor read thresh + this
+int cyclesOn = 0; //times we cycled on
 int sss = 0; //spurious sample set
 
 // eval stuff
@@ -71,8 +72,8 @@ void loop(){
 
 void processEval() {
 
-  int shortenedArrayLen = ARRAYSIZE-3;
-  float shortenedArray[ARRAYSIZE-3];
+  int shortenedArrayLen = ARRAYSIZE-OLLEVEL;
+  float shortenedArray[ARRAYSIZE-OLLEVEL];
 
   float result = 0;
 
@@ -82,11 +83,11 @@ void processEval() {
   stats.bubbleSort(evalArray, evalArrayLen);
 
   for (int i = 3; i < evalArrayLen; ++i) {
-    shortenedArray[i-3] = evalArray[i];
+    shortenedArray[i-OLLEVEL] = evalArray[i];
     Serial.print("s");
-    Serial.print(i-2);
+    Serial.print(i-OLLEVEL);
     Serial.print(":");
-    Serial.println(shortenedArray[i-2]);
+    Serial.println(shortenedArray[i-OLLEVEL]);
   }
 
   result = stats.mode(shortenedArray, shortenedArrayLen, 0.1);
