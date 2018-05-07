@@ -1,13 +1,17 @@
+RPi - various - take inventory
+Chip - various - take inventory
+
 Float Switch, side mounted horizontal (6) - Amazon
 Breadboard, mini, 170 pts (6) - Amazon
-Breadboard, 400 pts (2) - Amazon
+Breadboard, 400 pts (4) - Amazon
 Breadboard, 830 pts (2) - Amazon
-Relay, DC -> AC (3), non-proto - Amazon
-Rotary Encoder (5) - Amazon
-Relay Interface Board - Amazon
+Relay, DC -> AC, SSR-40DA (3), non-proto - Amazon
+Relay Interface Board, DC -> AC, SRD-05VDC-SL-C - Amazon
+Rotary Encoder, KY-040 (5) - Amazon
 Battery Holder, AA (12) - Amazon
 Battery Holder, 23A (10) - Amazon
 Battery Holder, 9V clip (10) - Amazon
+Battery Case, 8 x AA - Amazon
 USB Adapter, mini -> micro OTG (5) - Amazon
 Breadboard Power Supply, 3.3V/5V - Amazon
 FTDI Friend - Amazon
@@ -22,13 +26,14 @@ DisplayPort to Mini DisplayPort Male to Female Adapter - Amazon
 HDMI to DisplayPort Converter Adapter with USB Power - Amazon
 Wireless Network Adapter, 802.11 B/G/N, Wireless USB, high gain antenna, 2W - Amazon
 Wireless Network Adapter, 802.11 n/g/b, Wireless USB, high gain antenna - Amazon
-Wireless Network Adapter, 802.11 n/g/b, Wireless USB (3) - Amazon
+Wireless Network Adapter, 802.11 n/g/b, Wireless USB (4 Edimax, 1 Kootek) - Amazon
 Soldering Station, Weller WES51 Analog - Amazon
 Solder, 44 Rosin Core 60/40,.031,1lb. Spool - Amazon
 Solder Tip Tinner - Amazon
 Solder Iron Tips, ETA/B/C/AA/BB/CC/R/T/S/KN (10) - Amazon
 Soldering Iron Tip Cleaning Wire Sponge With Brass Ball - Amazon
 Desoldering Wick, 2.5mm Width, 5' Length - Amazon
+Solder Sucker - Amazon
 UHF female SO239 to MCX male right angle Adapter - Amazon
 SMA male to MCX male right Adapter - Amazon
 RF Upconverter For Software Defined Radio, Ham It Up v1.3 - Amazon
@@ -58,12 +63,12 @@ ATTINY85 (2) - Amazon
 USB PC remote control, Sanoxy - Amazon
 Prototype strip board, 4"x10", 4000 hole (2) - Amazon
 Prototype board, 4x6cm, 280 tin-plated holes (5) - Amazon
-Capacitors, 0.1uF 50V Low Voltage Ceramic Disc (30) - Amazon
 Semiconductor Kit (320 Transistors & Diodes) - Amazon
 potentiometers, trimmer pots (15) (one each) 101(100Ω) - 504(500kΩ) - Amazon
 Bluetooth Receiver, HC-06, passcode 1234 - Amazon
 Bluetooth Adapter, USB - Amazon
-DC-DC Buck Converter, 1.23V-30V, LM2596 - Amazon
+DC-DC Buck Converter Breakout, 1.23V-30V, LM2596 - Amazon
+DC-DC Buck Converter, 12V -> 5V 3A - Amazon
 Fuse Holder, ATC blade inline (5) - Amazon
 Flex Cable for Raspberry Pi Camera - 24" / 610mm - Amazon
 Flex Cable for Raspberry Pi Camera - 4" / 100mm - Amazon
@@ -73,3 +78,35 @@ BMP180 Digital Barometric Pressure Sensor Breakout - Amazon
 HTU21D Humidity Sensor Breakout - Amazon
 Copper Heatsinks for Raspberry Pi and VGA RAM Memory Cooler (8) - Amazon
 LEDs, 5 Color Assorted, 5mm (25) - Amazon
+RPi breakout, w/ ribbon cable - Amazon
+RPi breakout, Pi Cobbler - Amazon
+RPi Camera, 5MP board - Amazon
+Coaxial Splitter, RCA DH24SPF Two Way 3 Ghz - Amazon
+RPi case, Blackberry (2) - Amazon
+MoCA Network Adapter, ECB2500C - Amazon
+eSATA cable, 6' - Amazon
+eSATA -> SATA cable, 3' - Amazon
+Hard Drive Encloser, aluminium, eSATA, USB 2.0 - Amazon
+BNC -> Banana plug/binding post adapter - Amazon
+Lexan sheet, 12" x 24" x 1/4" - Amazon
+Resistors, various (365) - Amazon
+Capacitor, various (100) - Amazon
+Capacitors, 0.1uF 50V Low Voltage Ceramic Disc (30) - Amazon
+Ring Terminal, crimp on (28) - Amazon
+Binding Post Connector, (10) - Amazon
+Cable Adapters, Micro USB OTG; Mini USB OTG; Micro USB Client; Mini USB Client; Micro HDMI to Full Sized HDMI - Amazon
+USB -> RJ45 Adapter - Amazon
+Multimeter, TekPower TP4000ZC - Amazon
+Alligator Clips for Multimeter - Amazon
+Power Pole Connector, 45A pairs (8) - Amazon
+Power Pole Connector, 30A pairs (30) - Amazon
+Battery Bank, 15Ah 4.8A
+Sound Card, USB - Amazon
+HDMI Female - Female Coupler - Amazon
+HDMI Cable, 3' (2) - Amazon
+HDMI -> VGA Adapter, Male - Female, active - Amazon
+Firewire Adapter, 4-pin Female -> 6-pin Male - Amazon
+Step Drillbit Set, for hard material - Amazon
+Coax Adapter, SMA Female -> UHF Male (2) - Amazon
+Coax Adapter, UHF Female -> RCS Male (2) - Amazon
+Shrink Wrap, tubing for wire (127) w/ case - Amazon
