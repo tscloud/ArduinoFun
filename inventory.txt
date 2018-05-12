@@ -1,5 +1,5 @@
-RPi - various - take inventory!
-Chip - various - take inventory!
+RPi - various - take inventory
+Chip - various - take inventory
 
 Float Switch, side mounted horizontal (6) - Amazon
 Breadboard, mini, 170 pts (6) - Amazon
