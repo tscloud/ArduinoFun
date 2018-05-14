@@ -105,6 +105,8 @@ void processEval() {
         cyclesOn++;
       }
     }
+    // check to see if we've moved beyond the threshold difference
+    //  & thusly can turn things off
     else if (result > (thresh + threshDiff)) {
       if (digitalRead(LED_PIN) == HIGH) {
         digitalWrite(LED_PIN, LOW);
