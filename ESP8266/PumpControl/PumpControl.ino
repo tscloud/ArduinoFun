@@ -105,7 +105,7 @@ void processEval() {
         cyclesOn++;
       }
     }
-    else {
+    else if (result > (thresh + threshDiff)) {
       if (digitalRead(LED_PIN) == HIGH) {
         digitalWrite(LED_PIN, LOW);
       }
