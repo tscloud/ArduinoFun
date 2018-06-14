@@ -8,7 +8,9 @@
 
 // You can pick one up at the Adafruit shop: www.adafruit.com/products/466
 
-
+//  ***
+//  see: https://github.com/adafruit/Adafruit-VCNL40X0-PCB
+//  ***
 
 #include <Wire.h>
 
