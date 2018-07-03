@@ -29,7 +29,9 @@ Wireless Network Adapter, 802.11 n/g/b, Wireless USB, high gain antenna - Amazon
 Wireless Network Adapter, 802.11 n/g/b, Wireless USB (4 Edimax, 1 Kootek) - Amazon
 Soldering Kit, Multi-Purpose Butane, Blazer SI-100CR Excalibur - Amazon
 Soldering Station, Weller WES51 Analog - Amazon
+Soldering Iron, Weller SP40NKUS Medium Duty LED - Amazon
 Solder, 44 Rosin Core 60/40,.031,1lb. Spool - Amazon
+Solder, 44 Rosin Core 63/37 .020" 3/4oz Kester Dispense-Pak - Amazon
 Solder Tip Tinner - Amazon
 Solder Iron Tips, ETA/B/C/AA/BB/CC/R/T/S/KN (10) - Amazon
 Soldering Iron Tip Cleaning Wire Sponge With Brass Ball - Amazon
@@ -98,6 +100,7 @@ Binding Post Connector, (10) - Amazon
 Cable Adapters, Micro USB OTG; Mini USB OTG; Micro USB Client; Mini USB Client; Micro HDMI to Full Sized HDMI - Amazon
 USB -> RJ45 Adapter - Amazon
 Multimeter, TekPower TP4000ZC - Amazon
+Multimeter, Pyle PDMT05 - Amazon
 Alligator Clips for Multimeter - Amazon
 Power Pole Connector, 45A pairs (8) - Amazon
 Power Pole Connector, 30A pairs (30) - Amazon
@@ -105,6 +108,7 @@ Battery Bank, 15Ah 4.8A
 Sound Card, USB - Amazon
 HDMI Female - Female Coupler - Amazon
 HDMI Cable, 3' (2) - Amazon
+HDMI Cable, 6.5' - Amazon
 HDMI -> VGA Adapter, Male - Female, active - Amazon
 Firewire Adapter, 4-pin Female -> 6-pin Male - Amazon
 Step Drillbit Set, for hard material - Amazon
@@ -119,3 +123,8 @@ PS2 Keyboard -> USB Adapter - Amazon
 DisplayPort Male -> VGA Female Adapter - Amazon
 RIGrunner 4005, DC patch panel - Amazon
 SE MZ101B Helping Hands with Magnifying Glass - Amazon
+Alligator Clip banana to banana Test Lead Cable 110cm lenght - Amazon
+Antenna, NAGOYA NA-701 DUAL BAND 144/430Mhz U/V SMA-F Antenna For Baofeng UV-5R KG-UVD1P - Amazon
+Programming Cable, USB, for Baofeng UV-5R/ Wouxun UVd1P/ UV6D - Amazon
+USB Hub, 7 Port High Speed USB 2.0, D-Link - Amazon
+USB Hub, 7 Port High Speed USB 2.0, Arkview - Amazon
