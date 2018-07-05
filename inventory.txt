@@ -69,7 +69,8 @@ Prototype board, 4x6cm, 280 tin-plated holes (5) - Amazon
 Semiconductor Kit (320 Transistors & Diodes) - Amazon
 potentiometers, trimmer pots (15) (one each) 101(100Ω) - 504(500kΩ) - Amazon
 Bluetooth Receiver, HC-06, passcode 1234 - Amazon
-Bluetooth Adapter, USB - Amazon
+Bluetooth Adapter, Plugable USB Bluetooth 4.0 Low Energy - Amazon
+Bluetooth Adapter, Cirago USB Bluetooth BTA3210 v2.1 EDR Class 2 - Amazon
 DC-DC Buck Converter Breakout, 1.23V-30V, LM2596 - Amazon
 DC-DC Buck Converter, 12V -> 5V 3A - Amazon
 Fuse Holder, ATC blade inline (5) - Amazon
@@ -109,6 +110,7 @@ Sound Card, USB - Amazon
 HDMI Female - Female Coupler - Amazon
 HDMI Cable, 3' (2) - Amazon
 HDMI Cable, 6.5' - Amazon
+HDMI Cable, 6', ferite cores - Amazon
 HDMI -> VGA Adapter, Male - Female, active - Amazon
 Firewire Adapter, 4-pin Female -> 6-pin Male - Amazon
 Step Drillbit Set, for hard material - Amazon
@@ -118,6 +120,7 @@ Shrink Wrap, tubing for wire (127) w/ case - Amazon
 Coax jumper, UHF-UHF, 6'/2'x2/9' - Amazon
 USB Extension Cable, USB A male -> USB A female - Amazon
 PS2 Keyboard -> USB Adapter - Amazon
+USB Female A To USB Mini Female B Adapter - Amazon
 15A Power Pole Connectors (4 Black, 4 Red) - Amazon
 30A Power Pole Connectors (4 Black, 4 Red) - Amazon
 DisplayPort Male -> VGA Female Adapter - Amazon
@@ -128,3 +131,8 @@ Antenna, NAGOYA NA-701 DUAL BAND 144/430Mhz U/V SMA-F Antenna For Baofeng UV-5R 
 Programming Cable, USB, for Baofeng UV-5R/ Wouxun UVd1P/ UV6D - Amazon
 USB Hub, 7 Port High Speed USB 2.0, D-Link - Amazon
 USB Hub, 7 Port High Speed USB 2.0, Arkview - Amazon
+Mini Keyboard with Mouse Touchpad, Laser Pointer, FAVI FE01 2.4GHz Wireless USB - Amazon
+Mini Keyboard with Mouse Touchpad, Mini Slim RF Wireless - Amazon
+External Hard Drive Enclosure, Vantec NexStar SX NST-285S2-BK 2.5-Inch SATA to USB 2.0 - Amazon
+External Hard Drive Enclosure, Vantec NexStar SX NST-285U2-BK 2.5-Inch IDE to USB 2.0 - Amazon
+Thermometer, Scythe "Kama Thermo Mini" Super Compact, digital - Amazon
