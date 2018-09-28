@@ -38,6 +38,7 @@ Adafruit_BME280 bme; // I2C
 // used for wifi
 const char* ssid     = "gopats";
 const char* password = "15courthouselane";
+const char* myhostname = "mallory";
 
 ESP8266WebServer server(80);
 
@@ -110,7 +111,7 @@ void printValues() {
 void wifiSetup() {
 
   // set hostname
-  WiFi.hostname(F("giniger"));
+  WiFi.hostname(myhostname);
 
   // Setup as softAP
   /*
@@ -132,6 +133,8 @@ void wifiSetup() {
   Serial.println(ssid);
   Serial.print(F("IP address: "));
   Serial.println(WiFi.localIP());
+  Serial.print(F("hostname: "));
+  Serial.println(WiFi.hostname());
 
   // Set up mDNS responder:
   //if (!MDNS.begin("giniger")) {
