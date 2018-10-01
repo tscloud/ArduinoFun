@@ -32,8 +32,11 @@ const char* ssid     = "gopats";
 const char* password = "15courthouselane";
 const char* myhostname = "mallory";
 const char* mqtt_server = "bigasspi";
+const char* mqtt_channel = "/test/htu21d";
 
-char result[8];
+char result[19]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
+char loctemp char[6] // [+/-]xx.x
+char lochum char[5] // xx.x
 
 //webserver
 ESP8266WebServer server(80);
@@ -44,34 +47,6 @@ PubSubClient client(espClient);
 String webString = "";    // String to display
 
 unsigned long delayTime;
-
-void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
-    if (client.connect("arduinoClient")) {
-      Serial.println("connected");
-      // Once connected, publish an announcement...
-      //client.publish("test_channel","hello world");
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
-    }
-  }
-}
-
-void pubData() {
-  // publish real data
-  //Serial.print("MQTT client state:");
-  //Serial.println(client.state());
-
-  client.publish("T1_channel",dtostrf(tempToF(htu.readTemperature()), 6, 2, result));
-  client.publish("H1_channel",dtostrf(htu.readHumidity(), 6, 2, result));
-}
 
 void setup() {
     Serial.begin(115200);
@@ -99,7 +74,6 @@ void setup() {
 
 }
 
-
 void loop() {
     // for webserver
     server.handleClient();
@@ -114,7 +88,41 @@ void loop() {
     client.loop();
 
     // Publish data
-    pubData();
+    pubData(tempToF(htu.readTemperature()), htu.readHumidity(), 0);
+}
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("arduinoClient")) {
+      Serial.println("connected");
+      // Once connected, publish an announcement...
+      //client.publish("test_channel","hello world");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
+void pubData(float temp, float humidity, float pressure) {
+  // publish real data
+  //Serial.print("MQTT client state:");
+  //Serial.println(client.state());
+
+  String result_s =
+
+  // convert temp to string
+  dtostrf(temp, 5, 1, loctemp);
+  // convert humidity to string
+  dtostrf(humidity, 4, 1, lochum);
+
+  client.publish(mqtt_channel, result);
 }
 
 // convert temperature
