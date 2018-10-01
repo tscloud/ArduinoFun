@@ -34,9 +34,13 @@ const char* myhostname = "mallory";
 const char* mqtt_server = "bigasspi";
 const char* mqtt_channel = "/test/htu21d";
 
-char result[19]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
+// this will be passed as the published data
+char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
+// used to build published data - char[]
 char loctemp char[6] // [+/-]xx.x
 char lochum char[5] // xx.x
+// used to build published data - String
+String result_s = "T";
 
 //webserver
 ESP8266WebServer server(80);
@@ -65,6 +69,13 @@ void setup() {
     }
 
     Serial.println("-- Default Test --");
+    Serial.print("result: ");
+    Serial.println(result);
+    Serial.print("result strlen: ");
+    Serial.println strlen(result);
+    Serial.print("result sizeof: ");
+    Serial.println sizeof(result);
+
     delayTime = 1000;
 
     Serial.println();
@@ -115,12 +126,19 @@ void pubData(float temp, float humidity, float pressure) {
   //Serial.print("MQTT client state:");
   //Serial.println(client.state());
 
-  String result_s =
-
   // convert temp to string
   dtostrf(temp, 5, 1, loctemp);
   // convert humidity to string
   dtostrf(humidity, 4, 1, lochum);
+
+  // -- char[] way
+  // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
+  strcat(result, loctemp);
+  strcat(result, ',H');
+  strcat(result, lochum);
+  // Don't bother w/ pressure --> we don't have it
+
+  // -- Arduino String way
 
   client.publish(mqtt_channel, result);
 }
