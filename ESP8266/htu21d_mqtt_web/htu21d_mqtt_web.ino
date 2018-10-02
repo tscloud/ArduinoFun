@@ -18,7 +18,9 @@
 #include <Wire.h>
 #include <Adafruit_HTU21DF.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
 #include <WiFiClient.h>
+#include <ESP8266WebServer.h>
 #include <PubSubClient.h>
 
 #define SEALEVELPRESSURE_HPA (1013.25)
@@ -42,9 +44,13 @@ char lochum [5]; // xx.x
 // used to build published data - String
 String result_s = "T";
 
+//webserver
+ESP8266WebServer server(80);
 //MQTT client
 WiFiClient espClient;
 PubSubClient client(espClient);
+
+String webString = "";    // String to display
 
 unsigned long delayTime;
 
@@ -52,17 +58,18 @@ void setup() {
     Serial.begin(115200);
     Serial.println(F("HTU21D test"));
 
-    // do our wifi thing inc. network connect, set hostname
+    // do our wifi thing inc. network connect, set hostname, disp html
     wifiSetup();
 
+    bool status;
+
     // default settings
-    bool status = htu.begin();
+    status = htu.begin();
     if (!status) {
         Serial.println("Could not find a valid HTU21D sensor, check wiring!");
         while (1);
     }
 
-    // DEBUG
     Serial.println("-- Default Test --");
     Serial.print("result: ");
     Serial.println(result);
@@ -77,9 +84,13 @@ void setup() {
 
     // setup MQTT
     client.setServer(mqtt_server, 1883);
+
 }
 
 void loop() {
+    // for webserver
+    server.handleClient();
+
     printValues();
     delay(delayTime);
 
@@ -175,6 +186,11 @@ void wifiSetup() {
   // set hostname
   WiFi.hostname(myhostname);
 
+  // Setup as softAP
+  /*
+  Serial.println(WiFi.softAP("ESPsoftAP_01") ? "Ready" : "Failed!");
+  */
+
   // Connect to WiFi network
   WiFi.begin(ssid, password);
   Serial.print(F("\n\r \n\rWorking to connect"));
@@ -192,4 +208,43 @@ void wifiSetup() {
   Serial.println(WiFi.localIP());
   Serial.print(F("hostname: "));
   Serial.println(WiFi.hostname());
+
+  // Set up mDNS responder:
+  //if (!MDNS.begin("giniger")) {
+  //  Serial.println("Error setting up MDNS responder!");
+  //  while (1) {
+  //    delay(1000);
+  //  }
+  //}
+  //Serial.println("mDNS responder started");
+
+  server.on("/", []() {
+    webString = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\
+<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\
+<head>\r\
+<title>HTU21D Environmental Display Server</title>\r\
+<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />\r\
+<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\r\
+<meta http-equiv=\"refresh\" content=\"20\" />\r\
+<meta name=\"viewport\" content=\"user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width\" />\r\
+<style type=\"text/css\">\r\
+body { margin-top:75px; background-color:#ffffff; width:100%; }\r\
+h1 { text-align:center; font:normal 24px/0px helveticaneue-bold,sans-serif; color:#666666; text-transform:uppercase; letter-spacing:0.4em; }\r\
+h2 { text-align:center; font:normal 48px/0px helveticaneue-ultralight,sans-serif; color:#000000; }\r\
+</style>\r\
+</head>\r\
+<body>\r\
+<h1>Temperature</h1>\r<h2>" + String(tempToF(htu.readTemperature()), 2) + "&deg;F</h2><br />" + "\r\
+<h1>Humidity</h1>\r<h2>" + String(htu.readHumidity(), 2) + "%</h2><br />" + "\r\
+</body>\r\
+</html>";
+    server.send(200, "text/html", webString); // send to someone's browser when asked
+  });
+
+  server.begin();
+  Serial.println(F("HTTP server started"));
+
+  // Add service to MDNS-SD
+  //MDNS.addService("http", "tcp", 80);
+
 }
