@@ -16,23 +16,24 @@
  ***************************************************************************/
 
 #include <Wire.h>
-#include <Adafruit_HTU21DF.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
+Adafruit_BME280 bme; // I2C
 
 // used for wifi
 const char* ssid     = "gopats";
 const char* password = "15courthouselane";
-const char* myhostname = "mallory";
+const char* myhostname = "dutchess";
 // used for MQTT
 const char* mqtt_server = "bigasspi";
-const char* mqtt_clientid = "htu21d_mqtt_client";
-const char* mqtt_channel = "/test/htu21d";
+const char* mqtt_clientid = "bme280";
+const char* mqtt_channel = "/test/bme280";
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -40,6 +41,7 @@ char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
 // used to build published data - char[]
 char loctemp [6]; // [+/-]xx.x
 char lochum [5]; // xx.x
+char locpress [7]; // xxxx.x
 // used to build published data - String
 String result_s = "T";
 
@@ -51,15 +53,15 @@ unsigned long delayTime;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println(F("HTU21D test"));
+    Serial.println(F("BME280 test"));
 
     // do our wifi thing inc. network connect, set hostname
     wifiSetup();
 
     // default settings
-    bool status = htu.begin();
+    bool status = bme.begin();
     if (!status) {
-        Serial.println("Could not find a valid HTU21D sensor, check wiring!");
+        Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }
 
@@ -91,7 +93,7 @@ void loop() {
     client.loop();
 
     // Publish data
-    pubData(tempToF(htu.readTemperature()), htu.readHumidity(), 0);
+    pubData(tempToF(bme.readTemperature()), bme.readHumidity(), bme.readPressure()/100.0F);
 }
 
 void reconnect() {
@@ -122,12 +124,16 @@ void pubData(float temp, float humidity, float pressure) {
   dtostrf(temp, 4, 1, loctemp);
   // convert humidity to string
   dtostrf(humidity, 4, 1, lochum);
+  // convert humidity to string
+  dtostrf(pressure, 6, 1, locpress);
 
   // DEBUG
   Serial.print("loctemp: ");
   Serial.println(loctemp);
   Serial.print("lochum: ");
   Serial.println(lochum);
+  Serial.print("locpress: ");
+  Serial.println(locpress);
 
   // -- char[] way
   // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
@@ -138,6 +144,8 @@ void pubData(float temp, float humidity, float pressure) {
   strcat(result, loctemp);
   strcat(result, ",H");
   strcat(result, lochum);
+  strcat(result, ",P");
+  strcat(result, locpress);
   // Don't bother w/ pressure --> we don't have it
 
   // DEBUG
@@ -161,11 +169,20 @@ float pressToMBar(float pressure) {
 
 void printValues() {
     Serial.print("Temperature = ");
-    Serial.print(tempToF(htu.readTemperature()));
-    Serial.println(" *F");
+    Serial.print(bme.readTemperature());
+    Serial.println(" *C");
+
+    Serial.print("Pressure = ");
+
+    Serial.print(bme.readPressure() / 100.0F);
+    Serial.println(" hPa");
+
+    Serial.print("Approx. Altitude = ");
+    Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
+    Serial.println(" m");
 
     Serial.print("Humidity = ");
-    Serial.print(htu.readHumidity());
+    Serial.print(bme.readHumidity());
     Serial.println(" %");
 
     Serial.println();
@@ -186,7 +203,7 @@ void wifiSetup() {
     Serial.print(".");
   }
 
-  Serial.println(F("HTU21D Environmental Display Server"));
+  Serial.println(F("BME280 Environmental Display Server"));
   Serial.print(F("Connected to "));
   Serial.println(ssid);
   Serial.print(F("IP address: "));
