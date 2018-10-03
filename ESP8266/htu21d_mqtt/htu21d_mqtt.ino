@@ -20,19 +20,24 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
+#include <FS.h>
+#include <ArduinoJson.h>
 
+
+#define CONFIG_FILE  "/config.json"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
 
 // used for wifi
-const char* ssid     = "gopats";
-const char* password = "15courthouselane";
-const char* myhostname = "mallory";
+char ssid[10]          = "gopats";
+char password[20]      = "15courthouselane";
+char myhostname[10]    = "mallory";
 // used for MQTT
-const char* mqtt_server = "bigasspi";
-const char* mqtt_clientid = "htu21d_mqtt_client";
-const char* mqtt_channel = "/test/htu21d";
+char mqtt_server[10]   = "bigasspi";
+int  mqtt_port = 1883;
+char mqtt_clientid[20] = "htu21d_mqtt_client";
+char mqtt_channel[50]  = "/test/htu21d";
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -40,18 +45,19 @@ char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
 // used to build published data - char[]
 char loctemp [6]; // [+/-]xx.x
 char lochum [5]; // xx.x
-// used to build published data - String
-String result_s = "T";
 
 //MQTT client
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-unsigned long delayTime;
+unsigned long delayTime = 1000
 
 void setup() {
     Serial.begin(115200);
     Serial.println(F("HTU21D test"));
+
+    // read config to wifi/mqtt/whatever config data
+    readConfig();
 
     // do our wifi thing inc. network connect, set hostname
     wifiSetup();
@@ -64,20 +70,17 @@ void setup() {
     }
 
     // DEBUG
-    Serial.println("-- Default Test --");
-    Serial.print("result: ");
-    Serial.println(result);
-    Serial.print("result strlen: ");
-    Serial.println(strlen(result));
-    Serial.print("result sizeof: ");
-    Serial.println(sizeof(result));
-
-    delayTime = 1000;
-
+    //Serial.println("-- Default Test --");
+    //Serial.print("result: ");
+    //Serial.println(result);
+    //Serial.print("result strlen: ");
+    //Serial.println(strlen(result));
+    //Serial.print("result sizeof: ");
+    //Serial.println(sizeof(result));
     Serial.println();
 
     // setup MQTT
-    client.setServer(mqtt_server, 1883);
+    client.setServer(mqtt_server, mqtt_port);
 }
 
 void loop() {
@@ -144,8 +147,6 @@ void pubData(float temp, float humidity, float pressure) {
   Serial.print("result: ");
   Serial.println(result);
 
-  // -- Arduino String way
-
   client.publish(mqtt_channel, result);
 }
 
@@ -172,7 +173,6 @@ void printValues() {
 }
 
 void wifiSetup() {
-
   // set hostname
   WiFi.hostname(myhostname);
 
@@ -193,4 +193,34 @@ void wifiSetup() {
   Serial.println(WiFi.localIP());
   Serial.print(F("hostname: "));
   Serial.println(WiFi.hostname());
+}
+
+void readConfig() {
+  if (SPIFFS.begin()) {
+    Serial.println("mounted file system");
+
+    // parse json config file
+    File jsonFile = GetFile(CONFIG_FILE);
+    if (jsonFile) {
+      // Allocate a buffer to store contents of the file.
+      size_t size = jsonFile.size();
+      std::unique_ptr<char[]> jsonBuf(new char[size]);
+      jsonFile.readBytes(jsonBuf.get(), size);
+
+      DynamicJsonBuffer jsonBuffer;
+      JsonObject& json = jsonBuffer.parseObject(jsonBuf.get());
+      if (json.success()) {
+        strcpy(ssid, json["ssid"]);
+        strcpy(password, json["password"]);
+        strcpy(myhostname, json["myhostname"]);
+        strcpy(mqtt_server, json["mqtt_server"]);
+        mqtt_port = json["mqtt_port"];
+        strcpy(mqtt_clientid, json["mqtt_clientid"]);
+        strcpy(mqtt_channel, json["mqtt_channel"]);
+      } else {
+        Serial.println("failed to load json config");
+      }
+      jsonFile.close();
+    }
+  }
 }

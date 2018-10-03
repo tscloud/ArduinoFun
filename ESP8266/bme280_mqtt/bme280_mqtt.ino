@@ -42,14 +42,12 @@ char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
 char loctemp [6]; // [+/-]xx.x
 char lochum [5]; // xx.x
 char locpress [7]; // xxxx.x
-// used to build published data - String
-String result_s = "T";
 
 //MQTT client
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-unsigned long delayTime;
+unsigned long delayTime = 1000;
 
 void setup() {
     Serial.begin(115200);
@@ -66,20 +64,17 @@ void setup() {
     }
 
     // DEBUG
-    Serial.println("-- Default Test --");
-    Serial.print("result: ");
-    Serial.println(result);
-    Serial.print("result strlen: ");
-    Serial.println(strlen(result));
-    Serial.print("result sizeof: ");
-    Serial.println(sizeof(result));
-
-    delayTime = 1000;
-
+    //Serial.println("-- Default Test --");
+    //Serial.print("result: ");
+    //Serial.println(result);
+    //Serial.print("result strlen: ");
+    //Serial.println(strlen(result));
+    //Serial.print("result sizeof: ");
+    //Serial.println(sizeof(result));
     Serial.println();
 
     // setup MQTT
-    client.setServer(mqtt_server, 1883);
+    client.setServer(mqtt_server, mqtt_port);
 }
 
 void loop() {
@@ -152,8 +147,6 @@ void pubData(float temp, float humidity, float pressure) {
   Serial.print("result: ");
   Serial.println(result);
 
-  // -- Arduino String way
-
   client.publish(mqtt_channel, result);
 }
 
@@ -189,7 +182,6 @@ void printValues() {
 }
 
 void wifiSetup() {
-
   // set hostname
   WiFi.hostname(myhostname);
 
