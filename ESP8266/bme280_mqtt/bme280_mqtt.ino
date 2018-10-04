@@ -30,14 +30,14 @@
 Adafruit_BME280 bme; // I2C
 
 // used for wifi
-char ssid[10]          = "******";
-char password[20]      = "****************";
-char myhostname[10]    = "*******";
+char ssid[10];
+char password[20];
+char myhostname[10];
 // used for MQTT
-char mqtt_server[10]   = "********";
+char mqtt_server[10];
 int  mqtt_port = 0;
-char mqtt_clientid[20] = "******************";
-char mqtt_channel[50]  = "************";
+char mqtt_clientid[20];
+char mqtt_channel[50];
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -148,7 +148,6 @@ void pubData(float temp, float humidity, float pressure) {
   strcat(result, lochum);
   strcat(result, ",P");
   strcat(result, locpress);
-  // Don't bother w/ pressure --> we don't have it
 
   // DEBUG
   Serial.print("result: ");
@@ -236,33 +235,12 @@ void readConfig() {
       JsonObject& json = jsonBuffer.parseObject(jsonBuf.get());
       if (json.success()) {
         strcpy(ssid, json["ssid"]);
-        Serial.print(F("ssid: "));
-        Serial.println(ssid);
-
         strcpy(password, json["password"]);
-        Serial.print(F("password: "));
-        Serial.println(password);
-
         strcpy(myhostname, json["myhostname"]);
-        Serial.print(F("myhostname: "));
-        Serial.println(myhostname);
-
         strcpy(mqtt_server, json["mqtt_server"]);
-        Serial.print(F("mqtt_server: "));
-        Serial.println(mqtt_server);
-
         mqtt_port = json["mqtt_port"];
-        Serial.print(F("mqtt_port: "));
-        Serial.println(mqtt_port);
-
         strcpy(mqtt_clientid, json["mqtt_clientid"]);
-        Serial.print(F("mqtt_clientid: "));
-        Serial.println(mqtt_clientid);
-
         strcpy(mqtt_channel, json["mqtt_channel"]);
-        Serial.print(F("mqtt_channel: "));
-        Serial.println(mqtt_channel);
-
       } else {
         Serial.println("failed to load json config");
       }
