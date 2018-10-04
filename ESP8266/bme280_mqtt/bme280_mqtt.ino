@@ -70,14 +70,6 @@ void setup() {
         while (1);
     }
 
-    // DEBUG
-    //Serial.println("-- Default Test --");
-    //Serial.print("result: ");
-    //Serial.println(result);
-    //Serial.print("result strlen: ");
-    //Serial.println(strlen(result));
-    //Serial.print("result sizeof: ");
-    //Serial.println(sizeof(result));
     Serial.println();
 
     // setup MQTT

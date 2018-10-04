@@ -30,14 +30,14 @@
 Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
 
 // used for wifi
-char ssid[10]          = "******";
-char password[20]      = "****************";
-char myhostname[10]    = "*******";
+char ssid[10];
+char password[20];
+char myhostname[10];
 // used for MQTT
-char mqtt_server[10]   = "********";
+char mqtt_server[10];
 int  mqtt_port = 0;
-char mqtt_clientid[20] = "******************";
-char mqtt_channel[50]  = "************";
+char mqtt_clientid[20];
+char mqtt_channel[50];
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -69,14 +69,6 @@ void setup() {
         while (1);
     }
 
-    // DEBUG
-    //Serial.println("-- Default Test --");
-    //Serial.print("result: ");
-    //Serial.println(result);
-    //Serial.print("result strlen: ");
-    //Serial.println(strlen(result));
-    //Serial.print("result sizeof: ");
-    //Serial.println(sizeof(result));
     Serial.println();
 
     // setup MQTT
