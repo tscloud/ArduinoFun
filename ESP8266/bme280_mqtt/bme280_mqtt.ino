@@ -21,19 +21,23 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
+#include <FS.h>
+#include <ArduinoJson.h>
 
+#define CONFIG_FILE  "/config.json"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 Adafruit_BME280 bme; // I2C
 
 // used for wifi
-const char* ssid     = "gopats";
-const char* password = "15courthouselane";
-const char* myhostname = "dutchess";
+char ssid[10]          = "******";
+char password[20]      = "****************";
+char myhostname[10]    = "*******";
 // used for MQTT
-const char* mqtt_server = "bigasspi";
-const char* mqtt_clientid = "bme280";
-const char* mqtt_channel = "/test/bme280";
+char mqtt_server[10]   = "********";
+int  mqtt_port = 0;
+char mqtt_clientid[20] = "******************";
+char mqtt_channel[50]  = "************";
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -52,6 +56,9 @@ unsigned long delayTime = 1000;
 void setup() {
     Serial.begin(115200);
     Serial.println(F("BME280 test"));
+
+    // read config to wifi/mqtt/whatever config data
+    readConfig();
 
     // do our wifi thing inc. network connect, set hostname
     wifiSetup();
@@ -123,12 +130,12 @@ void pubData(float temp, float humidity, float pressure) {
   dtostrf(pressure, 6, 1, locpress);
 
   // DEBUG
-  Serial.print("loctemp: ");
-  Serial.println(loctemp);
-  Serial.print("lochum: ");
-  Serial.println(lochum);
-  Serial.print("locpress: ");
-  Serial.println(locpress);
+  //Serial.print("loctemp: ");
+  //Serial.println(loctemp);
+  //Serial.print("lochum: ");
+  //Serial.println(lochum);
+  //Serial.print("locpress: ");
+  //Serial.println(locpress);
 
   // -- char[] way
   // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
@@ -202,4 +209,64 @@ void wifiSetup() {
   Serial.println(WiFi.localIP());
   Serial.print(F("hostname: "));
   Serial.println(WiFi.hostname());
+}
+
+// file io
+File GetFile(String fileName) {
+  File textFile;
+  if (SPIFFS.exists(fileName)) {
+    textFile = SPIFFS.open(fileName, "r");
+  }
+  return textFile;
+}
+
+void readConfig() {
+  if (SPIFFS.begin()) {
+    Serial.println("mounted file system");
+
+    // parse json config file
+    File jsonFile = GetFile(CONFIG_FILE);
+    if (jsonFile) {
+      // Allocate a buffer to store contents of the file.
+      size_t size = jsonFile.size();
+      std::unique_ptr<char[]> jsonBuf(new char[size]);
+      jsonFile.readBytes(jsonBuf.get(), size);
+
+      DynamicJsonBuffer jsonBuffer;
+      JsonObject& json = jsonBuffer.parseObject(jsonBuf.get());
+      if (json.success()) {
+        strcpy(ssid, json["ssid"]);
+        Serial.print(F("ssid: "));
+        Serial.println(ssid);
+
+        strcpy(password, json["password"]);
+        Serial.print(F("password: "));
+        Serial.println(password);
+
+        strcpy(myhostname, json["myhostname"]);
+        Serial.print(F("myhostname: "));
+        Serial.println(myhostname);
+
+        strcpy(mqtt_server, json["mqtt_server"]);
+        Serial.print(F("mqtt_server: "));
+        Serial.println(mqtt_server);
+
+        mqtt_port = json["mqtt_port"];
+        Serial.print(F("mqtt_port: "));
+        Serial.println(mqtt_port);
+
+        strcpy(mqtt_clientid, json["mqtt_clientid"]);
+        Serial.print(F("mqtt_clientid: "));
+        Serial.println(mqtt_clientid);
+
+        strcpy(mqtt_channel, json["mqtt_channel"]);
+        Serial.print(F("mqtt_channel: "));
+        Serial.println(mqtt_channel);
+
+      } else {
+        Serial.println("failed to load json config");
+      }
+      jsonFile.close();
+    }
+  }
 }

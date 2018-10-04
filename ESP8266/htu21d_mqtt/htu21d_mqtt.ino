@@ -30,14 +30,14 @@
 Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
 
 // used for wifi
-char ssid[10]          = "gopats";
-char password[20]      = "15courthouselane";
-char myhostname[10]    = "mallory";
+char ssid[10]          = "******";
+char password[20]      = "****************";
+char myhostname[10]    = "*******";
 // used for MQTT
-char mqtt_server[10]   = "bigasspi";
-int  mqtt_port = 1883;
-char mqtt_clientid[20] = "htu21d_mqtt_client";
-char mqtt_channel[50]  = "/test/htu21d";
+char mqtt_server[10]   = "********";
+int  mqtt_port = 0;
+char mqtt_clientid[20] = "******************";
+char mqtt_channel[50]  = "************";
 
 // this will be passed as the published data
 // NOTE on data structure: "-" sign not currently accounted for
@@ -50,7 +50,7 @@ char lochum [5]; // xx.x
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-unsigned long delayTime = 1000
+unsigned long delayTime = 1000;
 
 void setup() {
     Serial.begin(115200);
@@ -127,10 +127,10 @@ void pubData(float temp, float humidity, float pressure) {
   dtostrf(humidity, 4, 1, lochum);
 
   // DEBUG
-  Serial.print("loctemp: ");
-  Serial.println(loctemp);
-  Serial.print("lochum: ");
-  Serial.println(lochum);
+  //Serial.print("loctemp: ");
+  //Serial.println(loctemp);
+  //Serial.print("lochum: ");
+  //Serial.println(lochum);
 
   // -- char[] way
   // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
@@ -193,6 +193,15 @@ void wifiSetup() {
   Serial.println(WiFi.localIP());
   Serial.print(F("hostname: "));
   Serial.println(WiFi.hostname());
+}
+
+// file io
+File GetFile(String fileName) {
+  File textFile;
+  if (SPIFFS.exists(fileName)) {
+    textFile = SPIFFS.open(fileName, "r");
+  }
+  return textFile;
 }
 
 void readConfig() {
