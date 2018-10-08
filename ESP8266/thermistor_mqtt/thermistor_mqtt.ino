@@ -16,8 +16,6 @@
  ***************************************************************************/
 
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
@@ -27,10 +25,26 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
+
 #define CONFIG_FILE  "/config.json"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-Adafruit_BME280 bme; // I2C
+//Thermistor stuff
+// which analog pin to connect
+#define THERMISTORPIN A0
+// resistance at 25 degrees C
+#define THERMISTORNOMINAL 10000
+// temp. for nominal resistance (almost always 25 C)
+#define TEMPERATURENOMINAL 25
+// how many samples to take and average, more takes longer
+// but is more 'smooth'
+#define NUMSAMPLES 5
+// The beta coefficient of the thermistor (usually 3000-4000)
+#define BCOEFFICIENT 3950
+// the value of the 'other' resistor
+#define SERIESRESISTOR 10000
+
+uint16_t samples[NUMSAMPLES];
 
 // used for wifi
 char ssid[10];
@@ -47,8 +61,6 @@ char mqtt_channel[50];
 char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
 // used to build published data - char[]
 char loctemp [6]; // [+/-]xx.x
-char lochum [5]; // xx.x
-char locpress [7]; // xxxx.x
 
 //MQTT client
 WiFiClient espClient;
@@ -58,7 +70,7 @@ unsigned long delayTime = 1000;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println(F("BME280 test"));
+    Serial.println(F("TMP36 test"));
 
     // read config to wifi/mqtt/whatever config data
     readConfig();
@@ -116,12 +128,6 @@ void setup() {
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 
-    // default settings
-    bool status = bme.begin();
-    if (!status) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring!");
-        while (1);
-    }
 
     Serial.println();
 
@@ -133,7 +139,7 @@ void loop() {
     // *** do OTA stuff
     ArduinoOTA.handle();
 
-    printValues();
+    //printValues();
     delay(delayTime);
 
     // MQTT publish
@@ -143,7 +149,7 @@ void loop() {
     client.loop();
 
     // Publish data
-    pubData(tempToF(bme.readTemperature()), bme.readHumidity(), bme.readPressure()/100.0F);
+    pubData(getTMPTemperature(), 0, 0);
 }
 
 void reconnect() {
@@ -172,18 +178,12 @@ void pubData(float temp, float humidity, float pressure) {
 
   // convert temp to string
   dtostrf(temp, 4, 1, loctemp);
-  // convert humidity to string
-  dtostrf(humidity, 4, 1, lochum);
-  // convert humidity to string
-  dtostrf(pressure, 6, 1, locpress);
 
   // DEBUG
   //Serial.print("loctemp: ");
   //Serial.println(loctemp);
   //Serial.print("lochum: ");
   //Serial.println(lochum);
-  //Serial.print("locpress: ");
-  //Serial.println(locpress);
 
   // -- char[] way
   // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
@@ -192,10 +192,6 @@ void pubData(float temp, float humidity, float pressure) {
   result[1] = '\0';
 
   strcat(result, loctemp);
-  strcat(result, ",H");
-  strcat(result, lochum);
-  strcat(result, ",P");
-  strcat(result, locpress);
 
   // DEBUG
   Serial.print("result: ");
@@ -214,25 +210,54 @@ float pressToMBar(float pressure) {
   return (pressure / 100.0F);
 }
 
+// get anolog sensor temp
+float getTMPTemperature() {
+  uint8_t i;
+  float average;
+
+  // take N samples in a row, with a slight delay
+  for (i=0; i< NUMSAMPLES; i++) {
+   samples[i] = analogRead(THERMISTORPIN);
+   delay(10);
+  }
+
+  // average all the samples out
+  average = 0;
+  for (i=0; i< NUMSAMPLES; i++) {
+     average += samples[i];
+  }
+  average /= NUMSAMPLES;
+
+  Serial.print("Average analog reading ");
+  Serial.println(average);
+
+  // convert the value to resistance
+  average = 1023 / average - 1;
+  average = SERIESRESISTOR / average;
+  Serial.print("Thermistor resistance ");
+  Serial.println(average);
+
+  float steinhart;
+  steinhart = average / THERMISTORNOMINAL;     // (R/Ro)
+  steinhart = log(steinhart);                  // ln(R/Ro)
+  steinhart /= BCOEFFICIENT;                   // 1/B * ln(R/Ro)
+  steinhart += 1.0 / (TEMPERATURENOMINAL + 273.15); // + (1/To)
+  steinhart = 1.0 / steinhart;                 // Invert
+  steinhart -= 273.15;                         // convert to C
+
+  Serial.print("Temperature ");
+  Serial.print(steinhart);
+  Serial.println(" *C");
+
+  return tempToF(steinhart);
+}
+
 void printValues() {
-    Serial.print("Temperature = ");
-    Serial.print(bme.readTemperature());
-    Serial.println(" *C");
+  Serial.print("Temperature = ");
+  Serial.print(getTMPTemperature());
+  Serial.println(" *F");
 
-    Serial.print("Pressure = ");
-
-    Serial.print(bme.readPressure() / 100.0F);
-    Serial.println(" hPa");
-
-    Serial.print("Approx. Altitude = ");
-    Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-    Serial.println(" m");
-
-    Serial.print("Humidity = ");
-    Serial.print(bme.readHumidity());
-    Serial.println(" %");
-
-    Serial.println();
+  Serial.println();
 }
 
 void wifiSetup() {
@@ -249,7 +274,7 @@ void wifiSetup() {
     Serial.print(".");
   }
 
-  Serial.println(F("BME280 Environmental Display Server"));
+  Serial.println(F("HTU21D Environmental Display Server"));
   Serial.print(F("Connected to "));
   Serial.println(ssid);
   Serial.print(F("IP address: "));

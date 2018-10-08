@@ -16,8 +16,6 @@
  ***************************************************************************/
 
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <PubSubClient.h>
@@ -27,10 +25,17 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
+
 #define CONFIG_FILE  "/config.json"
 #define SEALEVELPRESSURE_HPA (1013.25)
+#define aref_voltage 3.3         // we tie 3.3V to ARef and measure it with a multimeter!
 
-Adafruit_BME280 bme; // I2C
+//TMP36 Pin Variables
+const int tempPin = A0; //the analog pin the TMP36's Vout (sense) pin is connected to
+                        //the resolution is 10 mV / degree centigrade with a
+                        //500 mV offset to allow for negative temperatures
+int tempReading;        // the analog reading from the sensor
+
 
 // used for wifi
 char ssid[10];
@@ -47,8 +52,6 @@ char mqtt_channel[50];
 char result[19] = "T"; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
 // used to build published data - char[]
 char loctemp [6]; // [+/-]xx.x
-char lochum [5]; // xx.x
-char locpress [7]; // xxxx.x
 
 //MQTT client
 WiFiClient espClient;
@@ -58,7 +61,7 @@ unsigned long delayTime = 1000;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println(F("BME280 test"));
+    Serial.println(F("TMP36 test"));
 
     // read config to wifi/mqtt/whatever config data
     readConfig();
@@ -116,12 +119,6 @@ void setup() {
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 
-    // default settings
-    bool status = bme.begin();
-    if (!status) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring!");
-        while (1);
-    }
 
     Serial.println();
 
@@ -133,7 +130,7 @@ void loop() {
     // *** do OTA stuff
     ArduinoOTA.handle();
 
-    printValues();
+    //printValues();
     delay(delayTime);
 
     // MQTT publish
@@ -143,7 +140,7 @@ void loop() {
     client.loop();
 
     // Publish data
-    pubData(tempToF(bme.readTemperature()), bme.readHumidity(), bme.readPressure()/100.0F);
+    pubData(getTMPTemperature(), 0, 0);
 }
 
 void reconnect() {
@@ -172,18 +169,12 @@ void pubData(float temp, float humidity, float pressure) {
 
   // convert temp to string
   dtostrf(temp, 4, 1, loctemp);
-  // convert humidity to string
-  dtostrf(humidity, 4, 1, lochum);
-  // convert humidity to string
-  dtostrf(pressure, 6, 1, locpress);
 
   // DEBUG
   //Serial.print("loctemp: ");
   //Serial.println(loctemp);
   //Serial.print("lochum: ");
   //Serial.println(lochum);
-  //Serial.print("locpress: ");
-  //Serial.println(locpress);
 
   // -- char[] way
   // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 19
@@ -192,10 +183,6 @@ void pubData(float temp, float humidity, float pressure) {
   result[1] = '\0';
 
   strcat(result, loctemp);
-  strcat(result, ",H");
-  strcat(result, lochum);
-  strcat(result, ",P");
-  strcat(result, locpress);
 
   // DEBUG
   Serial.print("result: ");
@@ -214,23 +201,36 @@ float pressToMBar(float pressure) {
   return (pressure / 100.0F);
 }
 
+// get anolog sensor temp
+float getTMPTemperature() {
+  tempReading = analogRead(tempPin);
+
+  Serial.print("Temp reading = ");
+  Serial.print(tempReading);     // the raw analog reading
+
+  // converting that reading to voltage, which is based off the reference voltage
+  float voltage = (tempReading / 1024.0) * 3.3;
+
+  // print out the voltage
+  Serial.print(" - ");
+  Serial.print(voltage); Serial.println(" volts");
+
+  // now print out the temperature
+  float temperatureC = (voltage - 0.5) * 100 ;  //converting from 10 mv per degree wit 500 mV offset
+                                               //to degrees ((volatge - 500mV) times 100)
+  Serial.print(temperatureC); Serial.println(" degrees C");
+
+  // now convert to Fahrenheight
+  float temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
+  Serial.print(temperatureF); Serial.println(" degrees F");
+
+  return temperatureF;
+}
+
 void printValues() {
     Serial.print("Temperature = ");
-    Serial.print(bme.readTemperature());
-    Serial.println(" *C");
-
-    Serial.print("Pressure = ");
-
-    Serial.print(bme.readPressure() / 100.0F);
-    Serial.println(" hPa");
-
-    Serial.print("Approx. Altitude = ");
-    Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
-    Serial.println(" m");
-
-    Serial.print("Humidity = ");
-    Serial.print(bme.readHumidity());
-    Serial.println(" %");
+    Serial.print(getTMPTemperature());
+    Serial.println(" *F");
 
     Serial.println();
 }
@@ -249,7 +249,7 @@ void wifiSetup() {
     Serial.print(".");
   }
 
-  Serial.println(F("BME280 Environmental Display Server"));
+  Serial.println(F("HTU21D Environmental Display Server"));
   Serial.print(F("Connected to "));
   Serial.println(ssid);
   Serial.print(F("IP address: "));
@@ -294,6 +294,5 @@ void readConfig() {
       }
       jsonFile.close();
     }
-    SPIFFS.end();
   }
 }
