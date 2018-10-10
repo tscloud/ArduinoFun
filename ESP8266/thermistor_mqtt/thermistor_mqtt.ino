@@ -42,7 +42,7 @@
 // The beta coefficient of the thermistor (usually 3000-4000)
 #define BCOEFFICIENT 3950
 // the value of the 'other' resistor
-#define SERIESRESISTOR 10000
+#define SERIESRESISTOR 57000
 
 uint16_t samples[NUMSAMPLES];
 
@@ -70,7 +70,7 @@ unsigned long delayTime = 1000;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println(F("TMP36 test"));
+    Serial.println(F("Thermistor test"));
 
     // read config to wifi/mqtt/whatever config data
     readConfig();
@@ -162,6 +162,8 @@ void reconnect() {
       // Once connected, publish an announcement...
       //client.publish("test_channel","hello world");
     } else {
+      Serial.print("clientid: ");
+      Serial.println(mqtt_clientid);
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
@@ -248,6 +250,9 @@ float getTMPTemperature() {
   Serial.print("Temperature ");
   Serial.print(steinhart);
   Serial.println(" *C");
+  Serial.print("Temperature ");
+  Serial.print(tempToF(steinhart));
+  Serial.println(" *F");
 
   return tempToF(steinhart);
 }

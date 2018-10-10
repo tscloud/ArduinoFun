@@ -31,6 +31,7 @@
 #define aref_voltage 3.3         // we tie 3.3V to ARef and measure it with a multimeter!
 
 //TMP36 Pin Variables
+// *** Need a voltage divider on EPS8266 as ADC can only read max 1.0V
 const int tempPin = A0; //the analog pin the TMP36's Vout (sense) pin is connected to
                         //the resolution is 10 mV / degree centigrade with a
                         //500 mV offset to allow for negative temperatures
@@ -294,5 +295,6 @@ void readConfig() {
       }
       jsonFile.close();
     }
+    SPIFFS.end();
   }
 }
