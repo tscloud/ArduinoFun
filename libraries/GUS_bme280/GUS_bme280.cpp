@@ -7,8 +7,22 @@
 #include "GUS_bme280.h"
 
 GUS_bme280::GUS_bme280() {
+  // default settings
+  bool status = bme.begin();
+  if (!status) {
+      Serial.println("Could not find a valid BME280 sensor, check wiring!");
+      while (1);
+  }
 }
 
-float GUS_base::readTemperature(void) {
+float GUS_bme280::readTemperature(void) {
+  return bme.readTemperature();
+}
 
+float GUS_bme280::readHumidity(void) {
+  return bme.readHumidity();
+}
+
+float GUS_bme280::readPressure(void) {
+  return bme.readPressure();
 }

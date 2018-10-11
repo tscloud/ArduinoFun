@@ -7,17 +7,14 @@
 #include "Adafruit_Sensor.h"
 #include "Adafruit_BME280.h"
 
-class GUS_bme280
-{
-public:
-  GUS_bme280();
-  //~GUS_bme280();
-  float readTemperature(void);
-  float readHumidity(void);
-  // ** put in super
-  float tempToF(float tempC);
-  void printValues(void);
+class GUS_bme280: public GUS_sensor_super {
+  public:
+    GUS_bme280();
+    //~GUS_bme280();
+    float readTemperature(void);
+    float readHumidity(void);
+    float readPressure(void);
 
-private:
-  Adafruit_BME280 bme; // I2C
+  private:
+    Adafruit_BME280 bme; // I2C
 };
