@@ -1,5 +1,5 @@
 /*
-  GUS_bme280.h - Grand Unified Sensor - HTU21D.
+  GUS_bme280.h - Grand Unified Sensor - BME280.
   Created by Tom S. Cloud, October 10, 2018.
   See LICENSE.txt.
 */

@@ -7,9 +7,6 @@
 #include "GUS_base.h"
 
 GUS_base::GUS_base() {
-}
-
-void GUS_base::setup() {
   client = PubSubClient(espClient);
 
   readConfig();
@@ -17,6 +14,18 @@ void GUS_base::setup() {
 
   // setup MQTT
   client.setServer(mqtt_server, mqtt_port);
+}
+
+void GUS_base::setup() {
+  /*
+  client = PubSubClient(espClient);
+
+  readConfig();
+  wifisetup();
+
+  // setup MQTT
+  client.setServer(mqtt_server, mqtt_port);
+  */
 }
 
 void GUS_base::loop() {
