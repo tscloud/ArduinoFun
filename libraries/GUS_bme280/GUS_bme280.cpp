@@ -8,6 +8,17 @@
 
 GUS_bme280::GUS_bme280() {
   // default settings
+  /*
+  bool status = bme.begin();
+  if (!status) {
+      Serial.println("Could not find a valid BME280 sensor, check wiring!");
+      while (1);
+  }
+  */
+}
+
+void GUS_bme280::setup() {
+  // default settings
   bool status = bme.begin();
   if (!status) {
       Serial.println("Could not find a valid BME280 sensor, check wiring!");
@@ -15,8 +26,13 @@ GUS_bme280::GUS_bme280() {
   }
 }
 
+
 float GUS_bme280::readTemperature(void) {
   return bme.readTemperature();
+}
+
+float GUS_bme280::readFTemperature(void) {
+  return tempToF(bme.readTemperature());
 }
 
 float GUS_bme280::readHumidity(void) {

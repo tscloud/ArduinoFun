@@ -4,6 +4,9 @@
   See LICENSE.txt.
 */
 
+#ifndef GUS_BASE_H
+#define GUS_BASE_H
+
 #include "Arduino.h"
 #include "ESP8266WiFi.h"
 #include "FS.h"
@@ -17,10 +20,9 @@ class GUS_base {
   public:
     GUS_base();
     //~GUS_base();
-    char mqtt_channel[50];
-    PubSubClient client;
     void setup();
     void loop();
+    void pubData(char *sname, float temp, float humidity, float pressure);
   private:
     // used for wifi
     char ssid[10];
@@ -30,10 +32,20 @@ class GUS_base {
     char mqtt_server[10];
     int  mqtt_port = 0;
     char mqtt_clientid[20];
+    char mqtt_channel[50];
+    // this will be passed as the published data
+    // NOTE on data structure: "-" sign not currently accounted for
+    //  Also need space for sensor name - MAX 10
+    char result[20]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 20
+    // used to build published data - char[]
+    char locchannel [70]; // big enough to hold mqtt_channel + sensor name
     WiFiClient espClient;
-    unsigned long delayTime = 1000;
+    PubSubClient client;
+    unsigned long delaytime = 1000;
     void readConfig();
     void wifisetup();
     void reconnect();
     File GetFile(String fileName);
+    String buildResult(float val, String type, String result);
 };
+#endif

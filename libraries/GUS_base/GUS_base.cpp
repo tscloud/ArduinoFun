@@ -7,16 +7,6 @@
 #include "GUS_base.h"
 
 GUS_base::GUS_base() {
-  client = PubSubClient(espClient);
-
-  readConfig();
-  wifisetup();
-
-  // setup MQTT
-  client.setServer(mqtt_server, mqtt_port);
-}
-
-void GUS_base::setup() {
   /*
   client = PubSubClient(espClient);
 
@@ -28,6 +18,16 @@ void GUS_base::setup() {
   */
 }
 
+void GUS_base::setup() {
+  client = PubSubClient(espClient);
+
+  readConfig();
+  wifisetup();
+
+  // setup MQTT
+  client.setServer(mqtt_server, mqtt_port);
+}
+
 void GUS_base::loop() {
   // MQTT publish
   if (!client.connected()) {
@@ -35,7 +35,49 @@ void GUS_base::loop() {
   }
   client.loop();
 
-  delay(delayTime);
+  delay(delaytime);
+}
+
+void GUS_base::pubData(char *sname, float temp, float humidity, float pressure) {
+  // publish real data
+  //Serial.print("MQTT client state:");
+  //Serial.println(client.state());
+
+  // (re)init array & channel name
+  result[0] = {'\0'};
+  locchannel[0] = {'\0'};
+
+  String sResult = "";
+  sResult = buildResult(temp, "T", sResult);
+  sResult = buildResult(humidity, "H", sResult);
+  sResult = buildResult(pressure, "P", sResult);
+  sResult.toCharArray(result, sizeof(result));
+
+  // DEBUG
+  Serial.print("result: ");
+  Serial.println(sResult);
+
+  // append sensor name to MQTT channel
+  strcat(locchannel, mqtt_channel);
+  strcat(locchannel, "/");
+  strcat(locchannel, sname);
+
+  // DEBUG
+  Serial.print("channel: ");
+  Serial.println(locchannel);
+
+  client.publish(locchannel, result);
+}
+
+String GUS_base::buildResult(float lval, String ltype, String lresult) {
+  if (lval != 0) {
+    if (lresult.length() != 0) {
+      lresult += ",";
+    }
+    lresult += ltype + lval;
+  }
+
+  return lresult;
 }
 
 void GUS_base::wifisetup() {
@@ -106,6 +148,7 @@ void GUS_base::readConfig() {
       if (json.success()) {
         strcpy(ssid, json["ssid"]);
         strcpy(password, json["password"]);
+        delaytime = json["delaytime"];
         strcpy(myhostname, json["myhostname"]);
         strcpy(mqtt_server, json["mqtt_server"]);
         mqtt_port = json["mqtt_port"];
