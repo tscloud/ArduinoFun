@@ -24,10 +24,24 @@ void GUS_bme280::setup() {
       Serial.println("Could not find a valid BME280 sensor, check wiring!");
       while (1);
   }
+  // --- weather monitoring ---
+  Serial.println("-- Weather Station Scenario --");
+  Serial.println("forced mode, 1x temperature / 1x humidity / 1x pressure oversampling,");
+  Serial.println("filter off");
+  bme.setSampling(Adafruit_BME280::MODE_FORCED,
+                  Adafruit_BME280::SAMPLING_X1, // temperature
+                  Adafruit_BME280::SAMPLING_X1, // pressure
+                  Adafruit_BME280::SAMPLING_X1, // humidity
+                  Adafruit_BME280::FILTER_OFF   );
+
+  // suggested rate is 1/60Hz (1m)
+  //  set delayTime to 60000 in config.json
 }
 
 
 float GUS_bme280::readTemperature(void) {
+  // Only needed in forced mode! In normal mode, you can remove the next line.
+  bme.takeForcedMeasurement(); // has no effect in normal mode
   return bme.readTemperature();
 }
 

@@ -18,17 +18,14 @@
 #include <Wire.h>
 
 #include <GUS_base.h>
-#include <GUS_bme280.h>
-#include <GUS_htu21d.h>
+#include <GUS_ds18b20.h>
 
 #define CONFIG_FILE  "/config.json"
-#define SENSOR1  "BME280"
-#define SENSOR2  "HTU21D"
+#define SENSOR1  "DS18B20"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 // declare GUS object refs
-GUS_bme280 sensor1;
-GUS_htu21d sensor2;
+GUS_ds18b20 sensor1;
 GUS_base gus;
 
 void setup() {
@@ -36,7 +33,6 @@ void setup() {
 
     // GUS & sensor setup
     sensor1.setup();
-    sensor2.setup();
     gus.setup();
 }
 
@@ -46,7 +42,6 @@ void loop() {
 
     // Publish data
     pubSensorData(&sensor1, SENSOR1);
-    pubSensorData(&sensor2, SENSOR2);
 }
 
 // Helper function
