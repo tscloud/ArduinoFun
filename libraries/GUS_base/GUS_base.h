@@ -20,6 +20,7 @@ class GUS_base {
   public:
     GUS_base();
     //~GUS_base();
+    unsigned long delaytime = 1000;
     void setup();
     void loop();
     void pubData(char *sname, float temp, float humidity, float pressure);
@@ -41,7 +42,6 @@ class GUS_base {
     char locchannel [70]; // big enough to hold mqtt_channel + sensor name
     WiFiClient espClient;
     PubSubClient client;
-    unsigned long delaytime = 1000;
     void readConfig();
     void wifisetup();
     void reconnect();

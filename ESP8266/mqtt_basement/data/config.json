@@ -5,6 +5,6 @@
     "delaytime":2000,
     "mqtt_server":"bigasspi",
     "mqtt_port":1883,
-    "mqtt_clientid":"bme280_mqtt_client",
+    "mqtt_clientid":"basement_mqtt_client",
     "mqtt_channel":"/home/basement"
 }

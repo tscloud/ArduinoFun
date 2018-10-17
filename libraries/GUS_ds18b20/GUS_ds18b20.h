@@ -7,13 +7,13 @@
 #ifndef GUS_ds18b20_H
 #define GUS_ds18b20_H
 
+#define TEMPERATURE_PRECISION 9 // Lower resolution
+#define ONE_WIRE_BUS 2 // Data wire is plugged into port 2 on the Arduino
+
 #include "Arduino.h"
 #include "OneWire.h"
 #include "DallasTemperature.h"
 #include "GUS_sensor_super.h"
-
-// Data wire is plugged into port 2 on the Arduino
-#define ONE_WIRE_BUS 2
 
 class GUS_ds18b20: public GUS_sensor_super {
   public:
@@ -26,6 +26,11 @@ class GUS_ds18b20: public GUS_sensor_super {
     float readPressure(void);
 
   private:
-    DallasTemperature sensors;
+    OneWire *oneWire;
+    DallasTemperature *sensors;
+    DeviceAddress tempDeviceAddress; // We'll use this variable to store a found device address
+    int numberOfDevices; // Number of temperature devices found
+    // helper function
+    void printAddress(DeviceAddress deviceAddress);
 };
 #endif

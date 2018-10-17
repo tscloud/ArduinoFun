@@ -32,11 +32,16 @@ void setup() {
     Serial.begin(115200);
 
     // GUS & sensor setup
-    sensor1.setup();
     gus.setup();
+    sensor1.setup();
 }
 
 void loop() {
+    // TEST
+    //sensor1.readTemperature();
+
+    //delay(gus.delaytime);
+
     // do GUS loop stuff
     gus.loop();
 

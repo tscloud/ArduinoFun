@@ -22,6 +22,6 @@ class GUS_htu21d: public GUS_sensor_super {
     float readPressure(void);
 
   private:
-    Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
+    Adafruit_HTU21DF *htu; // I2C
 };
 #endif

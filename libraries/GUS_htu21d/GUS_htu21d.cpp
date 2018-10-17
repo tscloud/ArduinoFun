@@ -7,19 +7,12 @@
 #include "GUS_htu21d.h"
 
 GUS_htu21d::GUS_htu21d() {
-  // default settings
-  /*
-  bool status = htu.begin();
-  if (!status) {
-      Serial.println("Could not find a valid HTU21D sensor, check wiring!");
-      while (1);
-  }
-  */
 }
 
 void GUS_htu21d::setup() {
   // default settings
-  bool status = htu.begin();
+  htu = new Adafruit_HTU21DF(); // I2C
+  bool status = htu -> begin();
   if (!status) {
       Serial.println("Could not find a valid HTU21D sensor, check wiring!");
       while (1);
@@ -28,15 +21,15 @@ void GUS_htu21d::setup() {
 
 
 float GUS_htu21d::readTemperature(void) {
-  return htu.readTemperature();
+  return htu -> readTemperature();
 }
 
 float GUS_htu21d::readFTemperature(void) {
-  return tempToF(htu.readTemperature());
+  return tempToF(htu -> readTemperature());
 }
 
 float GUS_htu21d::readHumidity(void) {
-  return htu.readHumidity();
+  return htu -> readHumidity();
 }
 
 float GUS_htu21d::readPressure(void) {

@@ -7,19 +7,12 @@
 #include "GUS_bme280.h"
 
 GUS_bme280::GUS_bme280() {
-  // default settings
-  /*
-  bool status = bme.begin();
-  if (!status) {
-      Serial.println("Could not find a valid BME280 sensor, check wiring!");
-      while (1);
-  }
-  */
 }
 
 void GUS_bme280::setup() {
   // default settings
-  bool status = bme.begin();
+  bme = new Adafruit_BME280();
+  bool status = bme -> begin();
   if (!status) {
       Serial.println("Could not find a valid BME280 sensor, check wiring!");
       while (1);
@@ -28,7 +21,7 @@ void GUS_bme280::setup() {
   Serial.println("-- Weather Station Scenario --");
   Serial.println("forced mode, 1x temperature / 1x humidity / 1x pressure oversampling,");
   Serial.println("filter off");
-  bme.setSampling(Adafruit_BME280::MODE_FORCED,
+  bme -> setSampling(Adafruit_BME280::MODE_FORCED,
                   Adafruit_BME280::SAMPLING_X1, // temperature
                   Adafruit_BME280::SAMPLING_X1, // pressure
                   Adafruit_BME280::SAMPLING_X1, // humidity
@@ -41,18 +34,18 @@ void GUS_bme280::setup() {
 
 float GUS_bme280::readTemperature(void) {
   // Only needed in forced mode! In normal mode, you can remove the next line.
-  bme.takeForcedMeasurement(); // has no effect in normal mode
-  return bme.readTemperature();
+  bme -> takeForcedMeasurement(); // has no effect in normal mode
+  return bme -> readTemperature();
 }
 
 float GUS_bme280::readFTemperature(void) {
-  return tempToF(bme.readTemperature());
+  return tempToF(bme -> readTemperature());
 }
 
 float GUS_bme280::readHumidity(void) {
-  return bme.readHumidity();
+  return bme -> readHumidity();
 }
 
 float GUS_bme280::readPressure(void) {
-  return bme.readPressure();
+  return bme -> readPressure();
 }
