@@ -37,7 +37,7 @@ class GUS_base {
     // this will be passed as the published data
     // NOTE on data structure: "-" sign not currently accounted for
     //  Also need space for sensor name - MAX 10
-    char result[20]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 20
+    char result[30]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 20
     // used to build published data - char[]
     char locchannel [70]; // big enough to hold mqtt_channel + sensor name
     WiFiClient espClient;
