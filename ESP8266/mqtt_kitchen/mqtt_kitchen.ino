@@ -30,7 +30,7 @@ void loop() {
 // Helper function
 void pubSensorData(GUS_sensor_super *sensor, char *sensorName) {
     gus.pubData(sensorName,
-      sensor -> readFTemperature(),
-      sensor -> readHumidity(),
-      sensor -> readPressure()/100.0F);
+      sensor->readFTemperature(),
+      sensor->readHumidity(),
+      sensor->readPressure()/100.0F);
 }

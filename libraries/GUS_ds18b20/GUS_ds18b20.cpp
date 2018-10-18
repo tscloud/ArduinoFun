@@ -17,10 +17,10 @@ void GUS_ds18b20::setup() {
   sensors = new DallasTemperature(oneWire);
 
   // Start up the library
-  sensors -> begin();
+  sensors->begin();
 
   // Grab a count of devices on the wire
-  numberOfDevices = sensors -> getDeviceCount();
+  numberOfDevices = sensors->getDeviceCount();
 
   // locate devices on the bus
   Serial.println("Locating devices...");
@@ -31,14 +31,14 @@ void GUS_ds18b20::setup() {
 
   // report parasite power requirements
   Serial.print("Parasite power is: ");
-  if (sensors -> isParasitePowerMode()) Serial.println("ON");
+  if (sensors->isParasitePowerMode()) Serial.println("ON");
   else Serial.println("OFF");
 
   // find address of device 0 <- should be the only device
   // Loop through each device, print out address
   for(int i=0;i<numberOfDevices; i++) {
     // Search the wire for address
-    if(sensors -> getAddress(tempDeviceAddress, i)) {
+    if(sensors->getAddress(tempDeviceAddress, i)) {
       Serial.print("Found device ");
       Serial.print(i, DEC);
       Serial.print(" with address: ");
@@ -49,10 +49,10 @@ void GUS_ds18b20::setup() {
       Serial.println(TEMPERATURE_PRECISION, DEC);
 
       // set the resolution to TEMPERATURE_PRECISION bit (Each Dallas/Maxim device is capable of several different resolutions)
-      sensors -> setResolution(tempDeviceAddress, TEMPERATURE_PRECISION);
+      sensors->setResolution(tempDeviceAddress, TEMPERATURE_PRECISION);
 
       Serial.print("Resolution actually set to: ");
-      Serial.print(sensors -> getResolution(tempDeviceAddress), DEC);
+      Serial.print(sensors->getResolution(tempDeviceAddress), DEC);
       Serial.println();
     } else {
       Serial.print("Found ghost device at ");
@@ -67,17 +67,17 @@ float GUS_ds18b20::readTemperature(void) {
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
   Serial.print("Requesting temperatures...");
-  sensors -> requestTemperatures(); // Send the command to get temperatures
+  sensors->requestTemperatures(); // Send the command to get temperatures
   Serial.println("DONE");
 
   // report connection
   Serial.print("isConnected: ");
-  if (sensors -> isConnected(tempDeviceAddress)) Serial.println("TRUE");
+  if (sensors->isConnected(tempDeviceAddress)) Serial.println("TRUE");
   else Serial.println("FALSE");
 
   float reply = 0;
   //reply = sensors.getTempCByIndex(0);
-  reply = sensors -> getTempC(tempDeviceAddress);
+  reply = sensors->getTempC(tempDeviceAddress);
 
   Serial.print("Temperature for the device 1 (index 0) is: ");
   Serial.println(reply);
