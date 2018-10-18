@@ -1,16 +1,16 @@
 #include <Wire.h>
 
 #include <GUS_base.h>
-#include <GUS_bme680.h>
+#include <GUS_bme280.h>
 #include <GUS_htu21d.h>
 
 #define CONFIG_FILE  "/config.json"
-#define SENSOR1  "BME680"
+#define SENSOR1  "BME280"
 #define SENSOR2  "HTU21D"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 // declare GUS object refs
-GUS_bme680 sensor1;
+GUS_bme280 sensor1;
 GUS_htu21d sensor2;
 GUS_base gus;
 

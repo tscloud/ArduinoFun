@@ -17,6 +17,7 @@ void GUS_bme280::setup() {
       Serial.println("Could not find a valid BME280 sensor, check wiring!");
       while (1);
   }
+  /*
   // --- weather monitoring ---
   Serial.println("-- Weather Station Scenario --");
   Serial.println("forced mode, 1x temperature / 1x humidity / 1x pressure oversampling,");
@@ -29,6 +30,7 @@ void GUS_bme280::setup() {
 
   // suggested rate is 1/60Hz (1m)
   //  set delayTime to 60000 in config.json
+  */
 }
 
 
