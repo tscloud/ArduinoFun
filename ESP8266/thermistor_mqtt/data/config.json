@@ -4,6 +4,6 @@
     "myhostname":"kreiger",
     "mqtt_server":"bigasspi",
     "mqtt_port":1883,
-    "mqtt_clientid":"thermistor_mqtt_client",
+    "mqtt_clientid":"therm_mqtt_client",
     "mqtt_channel":"/test/thermistor"
 }

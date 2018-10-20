@@ -42,7 +42,7 @@
 // The beta coefficient of the thermistor (usually 3000-4000)
 #define BCOEFFICIENT 3950
 // the value of the 'other' resistor
-#define SERIESRESISTOR 57000
+#define SERIESRESISTOR 10000
 
 uint16_t samples[NUMSAMPLES];
 
@@ -128,11 +128,13 @@ void setup() {
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 
-
     Serial.println();
 
     // setup MQTT
     client.setServer(mqtt_server, mqtt_port);
+    // TEST
+    Serial.print("PubSubClient state: ");
+    Serial.println(client.state());
 }
 
 void loop() {
@@ -150,12 +152,16 @@ void loop() {
 
     // Publish data
     pubData(getTMPTemperature(), 0, 0);
+    // TEST
+    //getTMPTemperature();
 }
 
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
+    Serial.print("client_id: ");
+    Serial.println(mqtt_clientid);
     // Attempt to connect
     if (client.connect(mqtt_clientid)) {
       Serial.println("connected");

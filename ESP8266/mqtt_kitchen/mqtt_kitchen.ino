@@ -1,14 +1,14 @@
 #include <Wire.h>
 
 #include <GUS_base.h>
-#include <GUS_ds18b20.h>
+#include <GUS_thermistor.h>
 
 #define CONFIG_FILE  "/config.json"
-#define SENSOR1  "DS18B20"
+#define SENSOR1  "THERM"
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 // declare GUS object refs
-GUS_ds18b20 sensor1;
+GUS_thermistor sensor1;
 GUS_base gus;
 
 void setup() {
