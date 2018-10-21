@@ -10,24 +10,26 @@
 #define SEALEVELPRESSURE_HPA (1013.25)
 
 // declare
-GUS_base gus;
-GUSh_mcp3008 aReader;
+GUS_base *gus;
+GUSh_mcp3008 *aReader;
 GUS_thermistor *sensor1;
 
 void setup() {
     Serial.begin(115200);
 
     // GUS & sensor setup
-    gus.setup();
+    gus = new GUS_base();
+    gus->setup();
 
-    aReader.setup();
-    sensor1 = new GUS_thermistor(aReader, MCPAPIN);
+    aReader = new GUSh_mcp3008();
+    aReader->setup();
+    sensor1 = new GUS_thermistor(*aReader, MCPAPIN);
     sensor1->setup();
 }
 
 void loop() {
     // do GUS loop stuff
-    gus.loop();
+    gus->loop();
 
     // Publish data
     pubSensorData(sensor1, SENSOR1);
@@ -35,7 +37,7 @@ void loop() {
 
 // Helper function
 void pubSensorData(GUS_sensor_super *sensor, char *sensorName) {
-    gus.pubData(sensorName,
+    gus->pubData(sensorName,
       sensor->readFTemperature(),
       sensor->readHumidity(),
       sensor->readPressure()/100.0F);
