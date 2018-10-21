@@ -9,6 +9,7 @@
 
 #include "Arduino.h"
 #include "GUS_sensor_super.h"
+#include "GUSh_mcp3008.h"
 
 //Thermistor stuff
 // which analog pin to connect
@@ -28,16 +29,18 @@
 class GUS_thermistor: public GUS_sensor_super {
   public:
     GUS_thermistor();
+    GUS_thermistor(GUSh_mcp3008 aMcp, uint8_t aPin);
     //~GUS_thermistor();
     void setup();
     float readTemperature(void);
     float readFTemperature(void);
     float readHumidity(void);
     float readPressure(void);
+    static float thermistorTemp(float analogValue);
+    GUSh_mcp3008 mcp;
 
   private:
     float getTMPTemperature(void);
-    uint16_t samplesT[NUMSAMPLES];
-
+    uint8_t pin;
 };
 #endif

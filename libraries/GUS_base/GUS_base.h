@@ -31,7 +31,7 @@ class GUS_base {
     // used for MQTT
     char mqtt_server[10];
     int  mqtt_port = 0;
-    char mqtt_clientid[20];
+    char mqtt_clientid[30];
     char mqtt_channel[50];
     // this will be passed as the published data
     // NOTE on data structure: "-" sign not currently accounted for

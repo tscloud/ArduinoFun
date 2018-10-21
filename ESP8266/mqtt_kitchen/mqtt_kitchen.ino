@@ -1,22 +1,28 @@
 #include <Wire.h>
 
 #include <GUS_base.h>
+#include <GUSh_mcp3008.h>
 #include <GUS_thermistor.h>
 
 #define CONFIG_FILE  "/config.json"
 #define SENSOR1  "THERM"
+#define MCPAPIN 2
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-// declare GUS object refs
-GUS_thermistor sensor1;
+// declare
 GUS_base gus;
+GUSh_mcp3008 aReader;
+GUS_thermistor *sensor1;
 
 void setup() {
     Serial.begin(115200);
 
     // GUS & sensor setup
     gus.setup();
-    sensor1.setup();
+
+    aReader.setup();
+    sensor1 = new GUS_thermistor(aReader, MCPAPIN);
+    sensor1->setup();
 }
 
 void loop() {
@@ -24,7 +30,7 @@ void loop() {
     gus.loop();
 
     // Publish data
-    pubSensorData(&sensor1, SENSOR1);
+    pubSensorData(sensor1, SENSOR1);
 }
 
 // Helper function

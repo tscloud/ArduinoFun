@@ -9,9 +9,26 @@
 GUS_thermistor::GUS_thermistor() {
 }
 
-void GUS_thermistor::setup() {
+GUS_thermistor::GUS_thermistor(GUSh_mcp3008 aMcp, uint8_t aPin) {
+  // TEST
+  Serial.println("*GUS_thermistor::GUS_thermistor - 1*");
+  uint16_t sample = aMcp.analogRead(aPin);
+
+  Serial.print("sample value: ");
+  Serial.println(sample);
+
+  mcp = aMcp;
+  pin = aPin;
+
+  Serial.println("*GUS_thermistor::GUS_thermistor - 2*");
+  sample = mcp.analogRead(aPin);
+
+  Serial.print("sample value: ");
+  Serial.println(sample);
 }
 
+void GUS_thermistor::setup() {
+}
 
 float GUS_thermistor::readTemperature(void) {
   return getTMPTemperature();
@@ -32,11 +49,22 @@ float GUS_thermistor::readPressure(void) {
 float GUS_thermistor::getTMPTemperature() {
   uint8_t i;
   float average;
+  uint16_t samplesT[NUMSAMPLES];
 
   // take N samples in a row, with a slight delay
   for (i=0; i< NUMSAMPLES; i++) {
-   samplesT[i] = analogRead(THERMISTORPIN);
-   delay(10);
+    //if (mcp != NULL) {
+      samplesT[i] = mcp.analogRead(pin);
+      Serial.println("*GUS_thermistor::getTMPTemperature*");
+      uint16_t sample = mcp.analogRead(pin);
+
+      Serial.print("sample value: ");
+      Serial.println(sample);
+    //}
+    //else{
+    //  samplesT[i] = analogRead(THERMISTORPIN);
+    //}
+    delay(10);
   }
 
   // average all the samples out
@@ -49,14 +77,18 @@ float GUS_thermistor::getTMPTemperature() {
   Serial.print("Average analog reading ");
   Serial.println(average);
 
+  return thermistorTemp(average);
+}
+
+float GUS_thermistor::thermistorTemp(float analogValue) {
   // convert the value to resistance
-  average = 1023 / average - 1;
-  average = SERIESRESISTOR / average;
+  analogValue = 1023 / analogValue - 1;
+  analogValue = SERIESRESISTOR / analogValue;
   Serial.print("Thermistor resistance ");
-  Serial.println(average);
+  Serial.println(analogValue);
 
   float steinhart;
-  steinhart = average / THERMISTORNOMINAL;     // (R/Ro)
+  steinhart = analogValue / THERMISTORNOMINAL; // (R/Ro)
   steinhart = log(steinhart);                  // ln(R/Ro)
   steinhart /= BCOEFFICIENT;                   // 1/B * ln(R/Ro)
   steinhart += 1.0 / (TEMPERATURENOMINAL + 273.15); // + (1/To)
