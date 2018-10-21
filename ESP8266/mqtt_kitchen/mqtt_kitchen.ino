@@ -23,8 +23,8 @@ void setup() {
 
     aReader = new GUSh_mcp3008();
     aReader->setup();
-    sensor1 = new GUS_thermistor(*aReader, MCPAPIN);
-    sensor1->setup();
+    sensor1 = new GUS_thermistor(aReader, MCPAPIN);
+    sensor1->setup(); // empty setup?
 }
 
 void loop() {

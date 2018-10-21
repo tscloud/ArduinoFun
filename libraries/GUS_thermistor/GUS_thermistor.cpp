@@ -9,22 +9,9 @@
 GUS_thermistor::GUS_thermistor() {
 }
 
-GUS_thermistor::GUS_thermistor(GUSh_mcp3008 aMcp, uint8_t aPin) {
-  // TEST
-  Serial.println("*GUS_thermistor::GUS_thermistor - 1*");
-  uint16_t sample = aMcp.analogRead(aPin);
-
-  Serial.print("sample value: ");
-  Serial.println(sample);
-
+GUS_thermistor::GUS_thermistor(GUSh_mcp3008 *aMcp, uint8_t aPin) {
   mcp = aMcp;
   pin = aPin;
-
-  Serial.println("*GUS_thermistor::GUS_thermistor - 2*");
-  sample = mcp.analogRead(aPin);
-
-  Serial.print("sample value: ");
-  Serial.println(sample);
 }
 
 void GUS_thermistor::setup() {
@@ -53,17 +40,12 @@ float GUS_thermistor::getTMPTemperature() {
 
   // take N samples in a row, with a slight delay
   for (i=0; i< NUMSAMPLES; i++) {
-    //if (mcp != NULL) {
-      samplesT[i] = mcp.analogRead(pin);
-      Serial.println("*GUS_thermistor::getTMPTemperature*");
-      uint16_t sample = mcp.analogRead(pin);
-
-      Serial.print("sample value: ");
-      Serial.println(sample);
-    //}
-    //else{
-    //  samplesT[i] = analogRead(THERMISTORPIN);
-    //}
+    if (mcp != NULL) {
+      samplesT[i] = mcp->analogRead(pin);
+    }
+    else{
+      samplesT[i] = analogRead(THERMISTORPIN);
+    }
     delay(10);
   }
 
