@@ -29,24 +29,24 @@ void GUS_base::setup() {
 }
 
 void GUS_base::loop() {
-  // MQTT publish
+  // MQTT connect if we're not connected
   if (!client.connected()) {
     reconnect();
   }
   client.loop();
 
+  // delay delay time read from config
   delay(delaytime);
 }
 
 void GUS_base::pubData(char *sname, float temp, float humidity, float pressure) {
   // publish real data
-  //Serial.print("MQTT client state:");
-  //Serial.println(client.state());
 
   // (re)init array & channel name
   result[0] = {'\0'};
   locchannel[0] = {'\0'};
 
+  // use Arduino String to build dat to be published
   String sResult = "";
   sResult = buildResult(temp, "T", sResult);
   sResult = buildResult(humidity, "H", sResult);
@@ -70,6 +70,7 @@ void GUS_base::pubData(char *sname, float temp, float humidity, float pressure) 
 }
 
 String GUS_base::buildResult(float lval, String ltype, String lresult) {
+  // potentially concat value & type to potentially previously built result
   if (lval != 0) {
     if (lresult.length() != 0) {
       lresult += ",";

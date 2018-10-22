@@ -33,14 +33,14 @@ class GUS_base {
     int  mqtt_port = 0;
     char mqtt_clientid[30];
     char mqtt_channel[50];
-    // this will be passed as the published data
-    // NOTE on data structure: "-" sign not currently accounted for
-    //  Also need space for sensor name - MAX 10
-    char result[30]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 20
-    // used to build published data - char[]
-    char locchannel [70]; // big enough to hold mqtt_channel + sensor name
     WiFiClient espClient;
     PubSubClient client;
+    // this will be passed as the published data
+    // NOTE on data structure: "-" sign not currently accounted for
+    //  Also need space for sensor name - MAX 10?
+    char result[30]; // T[+/-]xx.x,Hyy.y,Pzz.z <-- greatest length: 20?
+    // used to build published data - char[]
+    char locchannel [70]; // big enough to hold mqtt_channel + sensor name
     unsigned long delaytime = 1000;
     void readConfig();
     void wifisetup();

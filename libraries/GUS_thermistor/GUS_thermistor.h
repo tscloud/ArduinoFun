@@ -37,10 +37,10 @@ class GUS_thermistor: public GUS_sensor_super {
     float readHumidity(void);
     float readPressure(void);
     static float thermistorTemp(float analogValue);
-    GUSh_mcp3008 *mcp;
 
   private:
     float getTMPTemperature(void);
     uint8_t pin;
+    GUSh_mcp3008 *mcp;
 };
 #endif

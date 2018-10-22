@@ -14,10 +14,13 @@ class GUS_sensor_super {
     GUS_sensor_super();
     //~GUS_sensor_super();
     virtual void setup() = 0;
+    // environmental data each sensor must report - please return 0
+    //  if sensor doeas not report data
     virtual float readTemperature(void) = 0;
     virtual float readFTemperature(void) = 0;
     virtual float readHumidity(void) = 0;
     virtual float readPressure(void) = 0;
+    // helper functions
     static float tempToF(float tempC);
     static float pressToMBar(float pressure);
     void printValues(void);

@@ -14,7 +14,7 @@ class GUSh_mcp3008 {
   public:
     GUSh_mcp3008();
     //~GUS_mcp3008();
-    void setup();
+    void setup(uint8_t digpin);
     float analogRead(uint8_t pin);
 
   private:
