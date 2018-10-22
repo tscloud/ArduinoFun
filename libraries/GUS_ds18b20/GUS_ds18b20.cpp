@@ -20,7 +20,7 @@ void GUS_ds18b20::setup() {
   sensors->begin();
 
   // Grab a count of devices on the wire
-  numberOfDevices = sensors->getDeviceCount();
+  int numberOfDevices = sensors->getDeviceCount();
 
   // locate devices on the bus
   Serial.println("Locating devices...");

@@ -20,6 +20,9 @@ class GUS_sensor_super {
     virtual float readFTemperature(void) = 0;
     virtual float readHumidity(void) = 0;
     virtual float readPressure(void) = 0;
+    // if sensor supports forced reading -> impliment here, otherwise ->
+    //  let it return false indicating that function is not supported
+    virtual bool forcedRead();
     // helper functions
     static float tempToF(float tempC);
     static float pressToMBar(float pressure);

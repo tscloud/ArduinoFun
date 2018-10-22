@@ -29,7 +29,6 @@ class GUS_ds18b20: public GUS_sensor_super {
     OneWire *oneWire;
     DallasTemperature *sensors;
     DeviceAddress tempDeviceAddress; // We'll use this variable to store a found device address
-    int numberOfDevices; // Number of temperature devices found
     // helper function
     void printAddress(DeviceAddress deviceAddress);
 };

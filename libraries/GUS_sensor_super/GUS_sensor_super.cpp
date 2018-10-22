@@ -9,6 +9,10 @@
 GUS_sensor_super::GUS_sensor_super() {
 }
 
+bool GUS_sensor_super::forcedRead() {
+  return false;
+}
+
 float GUS_sensor_super::tempToF(float tempC) {
   return (tempC * 9.0F)/5.0F + 32.0F;
 }
