@@ -46,11 +46,13 @@ float GUS_bme680::readPressure(void) {
   //return bme -> pressure;
 }
 
-bool GUS_bme680::performReading(void) {
-  bool reply = true;
+bool GUS_bme680::forcedRead(void) {
   if (! bme->performReading()) {
     Serial.println("Failed to perform reading :(");
-    reply = false;
+    useForcedRead = false;
   }
-  return reply;
+  else {
+    useForcedRead = true;
+  }
+  return useForcedRead;
 }

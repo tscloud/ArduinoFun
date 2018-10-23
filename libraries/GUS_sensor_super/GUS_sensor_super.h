@@ -16,16 +16,18 @@ class GUS_sensor_super {
     virtual void setup() = 0;
     // environmental data each sensor must report - please return 0
     //  if sensor doeas not report data
-    virtual float readTemperature(void) = 0;
-    virtual float readFTemperature(void) = 0;
-    virtual float readHumidity(void) = 0;
-    virtual float readPressure(void) = 0;
+    virtual float readTemperature(void);
+    virtual float readFTemperature(void);
+    virtual float readHumidity(void);
+    virtual float readPressure(void);
     // if sensor supports forced reading -> impliment here, otherwise ->
     //  let it return false indicating that function is not supported
-    virtual bool forcedRead();
+    virtual bool forcedRead(void);
     // helper functions
     static float tempToF(float tempC);
     static float pressToMBar(float pressure);
     void printValues(void);
+  protected:
+    bool useForcedRead = false;
 };
 #endif

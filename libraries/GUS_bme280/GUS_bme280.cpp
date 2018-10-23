@@ -36,7 +36,7 @@ void GUS_bme280::setup() {
 
 float GUS_bme280::readTemperature(void) {
   // Only needed in forced mode! In normal mode, you can remove the next line.
-  bme->takeForcedMeasurement(); // has no effect in normal mode
+  //bme->takeForcedMeasurement(); // has no effect in normal mode
   return bme->readTemperature();
 }
 
@@ -51,3 +51,11 @@ float GUS_bme280::readHumidity(void) {
 float GUS_bme280::readPressure(void) {
   return bme->readPressure();
 }
+
+bool GUS_bme280::forcedRead() {
+  bme->takeForcedMeasurement(); // has no effect in normal mode
+  useForcedRead = true; // set instance var
+
+  return useForcedRead;
+}
+

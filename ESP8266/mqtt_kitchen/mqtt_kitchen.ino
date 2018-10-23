@@ -12,16 +12,19 @@
 #include <GUS_thermistor.h>
 
 // +++ needed for MQTT topic: 1 for each sensor
-#define SENSOR1  "THERM"
+#define SENSOR1  "THERM1"
+#define SENSOR2  "THERM2"
 // pins for ADC
 #define MCABOARDPIN 15 // digital pin on board ADC connects to
 #define MCPAPIN1 2 // analog pin on ADC sensor connects to
+#define MCPAPIN2 4 // analog pin on ADC sensor connects to
 
 // declare GUS base & sensors
 GUS_base *gus;
 // +++ references to sensors
 GUSh_mcp3008 *aReader; // GUSh: MCP3008 ADC: needed for multiple anlog sensors
 GUS_thermistor *sensor1; // sensor: thermistor
+GUS_thermistor *sensor2; // sensor: thermistor
 
 void setup() {
     Serial.begin(115200);
@@ -35,6 +38,8 @@ void setup() {
     aReader->setup(MCABOARDPIN);
     sensor1 = new GUS_thermistor(aReader, MCPAPIN1);
     sensor1->setup(); // empty setup?
+    sensor2 = new GUS_thermistor(aReader, MCPAPIN2);
+    sensor2->setup(); // empty setup?
 }
 
 void loop() {
@@ -43,6 +48,7 @@ void loop() {
 
     // +++ Publish data for each sensor
     pubSensorData(sensor1, SENSOR1);
+    pubSensorData(sensor2, SENSOR2);
 }
 
 // Helper function

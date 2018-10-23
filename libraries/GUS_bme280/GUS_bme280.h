@@ -21,7 +21,7 @@ class GUS_bme280: public GUS_sensor_super {
     float readFTemperature(void);
     float readHumidity(void);
     float readPressure(void);
-
+    bool forcedRead(void);
   private:
     Adafruit_BME280 *bme; // I2C
 };
