@@ -19,7 +19,6 @@ class GUS_htu21d: public GUS_sensor_super {
     float readTemperature(void);
     float readFTemperature(void);
     float readHumidity(void);
-    float readPressure(void);
 
   private:
     Adafruit_HTU21DF *htu; // I2C

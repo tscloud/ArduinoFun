@@ -25,14 +25,6 @@ float GUS_thermistor::readFTemperature(void) {
   return tempToF(getTMPTemperature());
 }
 
-float GUS_thermistor::readHumidity(void) {
-  return 0;
-}
-
-float GUS_thermistor::readPressure(void) {
-  return 0;
-}
-
 float GUS_thermistor::getTMPTemperature() {
   uint8_t i;
   float average;

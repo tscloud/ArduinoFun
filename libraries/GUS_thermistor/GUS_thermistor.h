@@ -34,8 +34,6 @@ class GUS_thermistor: public GUS_sensor_super {
     void setup();
     float readTemperature(void);
     float readFTemperature(void);
-    float readHumidity(void);
-    float readPressure(void);
     static float thermistorTemp(float analogValue);
 
   private:

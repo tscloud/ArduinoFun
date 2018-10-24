@@ -31,7 +31,3 @@ float GUS_htu21d::readFTemperature(void) {
 float GUS_htu21d::readHumidity(void) {
   return htu->readHumidity();
 }
-
-float GUS_htu21d::readPressure(void) {
-  return 0;
-}

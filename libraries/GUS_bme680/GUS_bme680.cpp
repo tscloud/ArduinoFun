@@ -27,32 +27,29 @@ void GUS_bme680::setup() {
 
 // -- look into performReading(void) and beginReading(void) --
 float GUS_bme680::readTemperature(void) {
-  return bme->readTemperature();
-  //return bme -> temperature; // these versions used w/ performReading()
+  return (useForcedRead) ? bme->temperature : bme->readTemperature();
 }
 
 float GUS_bme680::readFTemperature(void) {
-  return tempToF(bme->readTemperature());
-  //return tempToF(bme -> temperature);
+  return (useForcedRead) ? tempToF(bme->temperature) : tempToF(bme->readTemperature());
 }
 
 float GUS_bme680::readHumidity(void) {
-  return bme->readHumidity();
-  //return bme -> humidity;
+  return (useForcedRead) ? bme->humidity : bme->readHumidity();
 }
 
 float GUS_bme680::readPressure(void) {
-  return bme->readPressure();
-  //return bme -> pressure;
+  return (useForcedRead) ? bme->pressure : bme->readPressure();
 }
 
 bool GUS_bme680::forcedRead(void) {
-  if (! bme->performReading()) {
+  if (!bme->performReading()) {
     Serial.println("Failed to perform reading :(");
     useForcedRead = false;
   }
   else {
     useForcedRead = true;
   }
+
   return useForcedRead;
 }

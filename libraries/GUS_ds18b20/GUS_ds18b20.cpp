@@ -89,14 +89,6 @@ float GUS_ds18b20::readFTemperature(void) {
   return tempToF(readTemperature());
 }
 
-float GUS_ds18b20::readHumidity(void) {
-  return 0;
-}
-
-float GUS_ds18b20::readPressure(void) {
-  return 0;
-}
-
 // function to print a device address
 void GUS_ds18b20::printAddress(DeviceAddress deviceAddress)
 {

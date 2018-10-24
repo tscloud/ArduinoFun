@@ -22,8 +22,6 @@ class GUS_ds18b20: public GUS_sensor_super {
     void setup();
     float readTemperature(void);
     float readFTemperature(void);
-    float readHumidity(void);
-    float readPressure(void);
 
   private:
     OneWire *oneWire;
