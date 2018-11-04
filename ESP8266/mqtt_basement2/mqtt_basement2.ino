@@ -8,15 +8,18 @@
 
 #include <GUS_base.h>
 // +++ include proper sensor (& maybe GUSh) headers
-#include <GUS_bme680.h>
+#include <GUS_bme280.h>
+#include <GUS_htu21d.h>
 
 // +++ needed for MQTT topic: 1 for each sensor
-#define SENSOR1  "BME680"
+#define SENSOR1  "BME280"
+#define SENSOR2  "HTU21D"
 
 // declare GUS base & sensors
 GUS_base *gus;
 // +++ references to sensors
-GUS_bme680 *sensor1; // sensor: BME280
+GUS_bme280 *sensor1; // sensor: BME280
+GUS_htu21d *sensor2; // sensor: HTU21D
 
 void setup() {
     Serial.begin(115200);
@@ -26,8 +29,10 @@ void setup() {
     gus->setup();
 
     // +++ instantiate & setup sensors
-    sensor1 = new GUS_bme680();
+    sensor1 = new GUS_bme280();
     sensor1->setup();
+    sensor2 = new GUS_htu21d();
+    sensor2->setup();
 }
 
 void loop() {
@@ -36,6 +41,7 @@ void loop() {
 
     // +++ Publish data for each sensor
     pubSensorData(sensor1, SENSOR1);
+    pubSensorData(sensor2, SENSOR2);
 }
 
 // Helper function

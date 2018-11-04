@@ -14,7 +14,7 @@ void GUS_bme680::setup() {
   bme = new Adafruit_BME680();
   bool status = bme->begin();
   if (!status) {
-      Serial.println("Could not find a valid BME280 sensor, check wiring!");
+      Serial.println("Could not find a valid BME680 sensor, check wiring!");
       while (1);
   }
   // Set up oversampling and filter initialization
