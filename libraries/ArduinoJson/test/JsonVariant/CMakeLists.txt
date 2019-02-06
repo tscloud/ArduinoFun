@@ -2,16 +2,22 @@
 # Copyright Benoit Blanchon 2014-2018
 # MIT License
 
-add_executable(JsonVariantTests 
+add_executable(JsonVariantTests
+	add.cpp
 	as.cpp
 	compare.cpp
 	copy.cpp
+	createNested.cpp
+	get.cpp
 	is.cpp
+	isnull.cpp
+	memoryUsage.cpp
+	misc.cpp
+	nesting.cpp
 	or.cpp
-	printTo.cpp
-	set_get.cpp
+	set.cpp
 	subscript.cpp
-	success.cpp
+	types.cpp
 	undefined.cpp
 )
 
