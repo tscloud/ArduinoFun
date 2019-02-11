@@ -88,11 +88,13 @@ void drawClockFace(const char *dwStr,   const char *dstStr,   const char *dateSt
   drawCenteredText(116, 1, titleStr, COLOR_BLUE);
 
   // Draw an Icon
+  /*
   if (isDaytime) {
     lcd.drawXBitmap(0, 0, sunIcon,  ICON_WIDTH, ICON_HEIGHT, COLOR_BLACK);
   } else  {
     lcd.drawXBitmap(0, 0, moonIcon, ICON_WIDTH, ICON_HEIGHT, COLOR_BLACK);
   }
+  */
 }
 
 #endif

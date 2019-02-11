@@ -10,7 +10,7 @@
  It will reconnect to the server if the connection is lost using a blocking
  reconnect function. See the 'mqtt_reconnect_nonblocking' example for how to
  achieve the same result without blocking the main loop.
- 
+
 */
 
 #include <SPI.h>
@@ -45,7 +45,7 @@ void reconnect() {
       // Once connected, publish an announcement...
       client.publish("outTopic","hello world");
       // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subscribe("/home/#");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -58,7 +58,7 @@ void reconnect() {
 
 void setup()
 {
-  Serial.begin(57600);
+  Serial.begin(115200);
 
   client.setServer(server, 1883);
   client.setCallback(callback);

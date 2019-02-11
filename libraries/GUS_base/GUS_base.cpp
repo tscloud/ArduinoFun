@@ -102,6 +102,8 @@ void GUS_base::wifisetup() {
   Serial.println(WiFi.localIP());
   Serial.print(F("hostname: "));
   Serial.println(WiFi.hostname());
+
+  Serial.printf("Wi-Fi mode set to WIFI_STA %s\n", WiFi.mode(WIFI_STA) ? "" : "Failed!");
 }
 
 void GUS_base::reconnect() {
@@ -132,6 +134,7 @@ File GUS_base::GetFile(String fileName) {
   return textFile;
 }
 
+/*
 void GUS_base::readConfig() {
   if (SPIFFS.begin()) {
     Serial.println("mounted file system");
@@ -157,6 +160,56 @@ void GUS_base::readConfig() {
         strcpy(mqtt_channel, json["mqtt_channel"]);
       } else {
         Serial.println("failed to load json config");
+      }
+      jsonFile.close();
+    }
+    SPIFFS.end();
+  }
+}
+*/
+
+void GUS_base::readConfig() {
+  if (SPIFFS.begin()) {
+    Serial.println("mounted file system");
+
+    // parse json config file
+    File jsonFile = GetFile(CONFIG_FILE);
+    if (jsonFile) {
+      // Allocate a buffer to store contents of the file.
+      size_t size = jsonFile.size();
+      std::unique_ptr<char[]> jsonBuf(new char[size]);
+      jsonFile.readBytes(jsonBuf.get(), size);
+
+      StaticJsonDocument<512> json;
+      DeserializationError error = deserializeJson(json, jsonBuf.get());
+      if (error) {
+        Serial.println("failed to load json config");
+      } else {
+        //JsonObject& json = doc.as<JsonObject>();
+        strcpy(ssid, json["ssid"]);
+        Serial.println(ssid);
+
+        strcpy(password, json["password"]);
+        Serial.println(password);
+
+        delaytime = json["delaytime"];
+        Serial.println(delaytime);
+
+        strcpy(myhostname, json["myhostname"]);
+        Serial.println(myhostname);
+
+        //strcpy(mqtt_server, json["mqtt_server"]);
+        strcpy(mqtt_server, "192.168.1.155");
+        Serial.println(mqtt_server);
+
+        mqtt_port = json["mqtt_port"];
+        Serial.println(mqtt_port);
+
+        strcpy(mqtt_clientid, json["mqtt_clientid"]);
+        Serial.println(mqtt_clientid);
+
+        strcpy(mqtt_channel, json["mqtt_channel"]);
+        Serial.println(mqtt_channel);
       }
       jsonFile.close();
     }

@@ -29,7 +29,7 @@ class GUS_base {
     char password[20];
     char myhostname[10];
     // used for MQTT
-    char mqtt_server[10];
+    char mqtt_server[30];
     int  mqtt_port = 0;
     char mqtt_clientid[30];
     char mqtt_channel[50];

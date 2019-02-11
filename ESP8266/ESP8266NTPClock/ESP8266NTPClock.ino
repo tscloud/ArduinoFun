@@ -46,6 +46,7 @@
 #include "TextGraphicsFunctions.h"
 #include "Misc.h"
 #include "NTP.h"
+#include "mqtt.h"
 
 // ***************************************************************
 // Start of user configuration items
@@ -213,6 +214,9 @@ void setup() {
   // Attempt logon to WiFi network and set timezone
   initNTP(WIFI_SSID, WIFI_PASS, TIMEZONE_OFFSET);
 
+  // Do MQTT setup
+  mqtt_setup();
+
 #if (USE_DST == true)
   // Inform the NTP code of DST status
   dstChanged(dstEnabled);
@@ -232,12 +236,16 @@ void setup() {
 
 void loop() {
 
+  // Do MQTT stuff we need to do in the loop()
+  mqtt_loop();
+
   if (timeStatus() != timeNotSet) {
     if (minute() != previousMinute) { //Update the display only if time has changed
       previousMinute = minute();
 
       // Draw the updated clock face
-      drawClockFace(getDWStr(), getDSTStr(), getDateStr(), getTimeStr(), TITLE_STRING, isDayTime());
+      //drawClockFace(getDWStr(), getDSTStr(), getDateStr(), getTimeStr(), TITLE_STRING, isDayTime());
+      drawClockFace(getTemp(), getDSTStr(), getDateStr(), getTimeStr(), TITLE_STRING, isDayTime());
     }
   }
   // Has the DST switch been pressed ?

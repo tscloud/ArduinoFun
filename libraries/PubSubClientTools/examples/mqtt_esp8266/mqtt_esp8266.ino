@@ -5,9 +5,9 @@
 #include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
 #include <ThreadController.h>
 
-#define WIFI_SSID "........"
-#define WIFI_PASS "........"
-#define MQTT_SERVER "broker.mqtt-dashboard.com"
+#define WIFI_SSID "gosox"
+#define WIFI_PASS "15courthouselane"
+#define MQTT_SERVER "bigasspi.fios-router.home"
 
 WiFiClient espClient;
 PubSubClient client(MQTT_SERVER, 1883, espClient);
@@ -36,8 +36,8 @@ void setup() {
   if (client.connect("ESP8266Client")) {
     Serial.println("connected");
 
-    mqtt.subscribe("test/inTopic1", topic1_subscriber);
-    mqtt.subscribe("test/inTopic2", topic2_subscriber);
+    mqtt.subscribe("/home/basement/BME680", topic1_subscriber);
+    //mqtt.subscribe("test/inTopic2", topic2_subscriber);
   } else {
     Serial.println(s+"failed, rc="+client.state());
   }
