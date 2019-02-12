@@ -3,7 +3,7 @@
   Created by Tom S. Cloud, October 10, 2018.
   See LICENSE.txt.
 */
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "GUS_sensor_super.h"
 
 GUS_sensor_super::GUS_sensor_super() {

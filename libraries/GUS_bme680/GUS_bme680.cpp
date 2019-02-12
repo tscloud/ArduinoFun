@@ -3,7 +3,7 @@
   Created by Tom S. Cloud, October 17, 2018.
   See LICENSE.txt.
 */
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "GUS_bme680.h"
 
 GUS_bme680::GUS_bme680() {

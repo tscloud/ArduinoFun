@@ -7,7 +7,7 @@
 #ifndef GUS_HTU21D_H
 #define GUS_HTU21D_H
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "Adafruit_HTU21DF.h"
 #include "GUS_sensor_super.h"
 

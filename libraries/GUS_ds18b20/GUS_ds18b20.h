@@ -10,7 +10,7 @@
 #define TEMPERATURE_PRECISION 9 // Lower resolution
 #define ONE_WIRE_BUS 2 // Data wire is plugged into marked port 2 on the FEATHER
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "OneWire.h"
 #include "DallasTemperature.h"
 #include "GUS_sensor_super.h"

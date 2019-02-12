@@ -37,6 +37,7 @@
  *    - 1.5.5 Serial output is now not allowed if telnet password is enabled
  *    - 1.5.6 Adjustments based on pull request from @jeroenst (to allow serial output with telnet password and setPassword method) - 2018-10-19
  *    - 1.5.7 Fixed bug for MAX_TIME_INACTIVE - 2018-11-03
+ *	  - 1.5.8 New macros to compatibility with SerialDebug (can use RemoteDebug or SerialDebug) thanks to @phrxmd
  *
  */
 
@@ -74,7 +75,7 @@ bool system_update_cpu_freq(uint8_t freq);
 
 #endif
 
-#define VERSION "1.5.6"
+#define VERSION "1.5.8"
 
 #include <Arduino.h>
 
@@ -93,15 +94,19 @@ WiFiClient TelnetClient;
 
 // Initialize the telnet server
 
-void RemoteDebug::begin(String hostName, uint8_t startingDebugLevel) {
-	begin(hostName, TELNET_PORT, startingDebugLevel);
+bool RemoteDebug::begin(String hostName, uint8_t startingDebugLevel) {
+	return begin(hostName, TELNET_PORT, startingDebugLevel);
 }
 
-void RemoteDebug::begin(String hostName, uint16_t port,  uint8_t startingDebugLevel) {
+bool RemoteDebug::begin(String hostName, uint16_t port,  uint8_t startingDebugLevel) {
 
 	// Initialize server telnet
 
-	TelnetServer.begin(port);
+	if (port != TELNET_PORT) { // Bug: not more can use begin(port)..
+	    return false;
+	}
+	
+	TelnetServer.begin();
 	TelnetServer.setNoDelay(true);
 
 	// Reserve space to buffer of print writes
@@ -123,7 +128,7 @@ void RemoteDebug::begin(String hostName, uint16_t port,  uint8_t startingDebugLe
 
 	_clientDebugLevel = startingDebugLevel;
 	_lastDebugLevel = startingDebugLevel;
-
+	return true;
 }
 
 // Set the password for telnet - thanks @jeroenst for suggest thist method
@@ -293,7 +298,9 @@ void RemoteDebug::handle() {
 
 		// Show the initial message
 
+#if SHOW_HELP
 		showHelp();
+#endif
 
 #ifdef CLIENT_BUFFERING
 		// Client buffering - send data in intervals to avoid delays or if its is too big
@@ -371,6 +378,7 @@ void RemoteDebug::handle() {
 #endif
 
 #ifdef MAX_TIME_INACTIVE
+#if MAX_TIME_INACTIVE > 0
 
 		// Inactivity - close connection if not received commands from user in telnet
 		// For reduce overheads
@@ -387,6 +395,7 @@ void RemoteDebug::handle() {
 			_connected = false;
 			_silence = false;
 		}
+#endif
 #endif
 
 	}
@@ -897,7 +906,7 @@ void RemoteDebug::processCommand() {
 
 	// Process commands
 
-	TelnetClient.print("* Debug: Command recevied: ");
+	TelnetClient.print("* Debug: Command received: ");
 	TelnetClient.println(_command);
 
 	String options = "";

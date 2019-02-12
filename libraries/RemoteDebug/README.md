@@ -1,6 +1,6 @@
 # RemoteDebug Library for ESP8266 or ESP32
 
-<a href="#releases"> ![build badge](https://img.shields.io/badge/version-v1.5.7-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3eadfd19246f4808907cf53599a6b9f0)](https://www.codacy.com/app/JoaoLopesF/RemoteDebug?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JoaoLopesF/RemoteDebug&amp;utm_campaign=Badge_Grade) <a href="https://github.com/JoaoLopesF/RemoteDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
+<a href="#releases"> ![build badge](https://img.shields.io/badge/version-v1.5.8-blue.svg)</a> [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3eadfd19246f4808907cf53599a6b9f0)](https://www.codacy.com/app/JoaoLopesF/RemoteDebug?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JoaoLopesF/RemoteDebug&amp;utm_campaign=Badge_Grade) <a href="https://github.com/JoaoLopesF/RemoteDebug/blob/master/LICENSE.txt">![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)</a>
 
 ## A library to remotely debug over a telnet connection
 
@@ -13,14 +13,14 @@
 
 ## Contents
 
-[About](#about)
-[Standard telnet](#telnet)
-[News](#news)
-[Wishlist](#wishlist)
-[Using](#usage)
-[Know issues](#knowissues)
-[Releases](#releases)
-[Thanks](#thanks)
+  * [About](#about)
+  * [Standard telnet](#telnet)
+  * [News](#news)
+  * [Wishlist](#wishlist)
+  * [Using](#usage)
+  * [Know issues](#knowissues)
+  * [Releases](#releases)
+  * [Thanks](#thanks)
 
 ## About
 
@@ -175,7 +175,9 @@ In the setup function after WiFi initialization
 ```cpp
 // Initialize the telnet server of RemoteDebug
 
-Debug.begin("Telnet_HostName"); // Initiaze the telnet server - this name is used in MDNS.begin
+if (Debug.begin("Telnet_HostName")) {
+  // Initialize the telnet server - this name is used in MDNS.begin
+} 
 
 // OR
 
@@ -183,7 +185,11 @@ Debug.begin(HOST_NAME); // Initiaze the telnet server - HOST_NAME is the used in
 
 // OR
 
-Debug.begin(HOST_NAME, PORT); // Initiaze the telnet server - HOST_NAME is the used in MDNS.begin
+if (Debug.begin(HOST_NAME, PORT)) {
+ // Initiaze the telnet server - HOST_NAME is the used in MDNS.begin
+} else {
+  // Do something since the library unable to start. Most likely because you specified a different port than 22
+}
 
 // OR
 

@@ -1,9 +1,9 @@
 {
-    "ssid": "gopats",
+    "ssid": "gosox",
     "password":"15courthouselane",
     "myhostname":"barry",
     "delaytime":10000,
-    "mqtt_server":"bigasspi",
+    "mqtt_server":"bigasspi.fios-router.home",
     "mqtt_port":1883,
     "mqtt_clientid":"basement2_mqtt_client",
     "mqtt_channel":"/home/basement2"

@@ -67,6 +67,13 @@
 #define BUFFER_PRINT 150
 #endif
 
+// Should the help text be displayed on connection.
+// Enabled by default
+
+#ifndef SHOW_HELP
+#define SHOW_HELP true
+#endif
+
 // ANSI Colors
 
 #define COLOR_RESET "\x1B[0m"
@@ -189,14 +196,26 @@
 #define DEBUG_W(fmt, ...) 	rdebugW(fmt, ##__VA_ARGS__)
 #define DEBUG_E(fmt, ...) 	rdebugE(fmt, ##__VA_ARGS__)
 
+// New way: To compatibility with SerialDebug (can use RemoteDebug or SerialDebug)
+// This is my favorite :)
+
+#define debugV(fmt, ...) rdebugVln(fmt, ##__VA_ARGS__)
+#define debugD(fmt, ...) rdebugDln(fmt, ##__VA_ARGS__)
+#define debugI(fmt, ...) rdebugIln(fmt, ##__VA_ARGS__)
+#define debugW(fmt, ...) rdebugWln(fmt, ##__VA_ARGS__)
+#define debugE(fmt, ...) rdebugEln(fmt, ##__VA_ARGS__)
+#define debugA(fmt, ...) rdebugVln(fmt, ##__VA_ARGS__)
+
+#define debugHandle() Debug.handle()
+
 ///// Class
 
 class RemoteDebug: public Print
 {
 	public:
 
-	void begin(String hostName, uint16_t port, uint8_t startingDebugLevel = DEBUG);
-	void begin(String hostName, uint8_t startingDebugLevel = DEBUG);
+	bool begin(String hostName, uint16_t port, uint8_t startingDebugLevel = DEBUG);
+	bool begin(String hostName, uint8_t startingDebugLevel = DEBUG);
 
 	void setPassword(String password);
 

@@ -7,7 +7,7 @@
 #ifndef GUS_BME280_H
 #define GUS_BME280_H
 
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "Adafruit_Sensor.h"
 #include "Adafruit_BME280.h"
 #include "GUS_sensor_super.h"
