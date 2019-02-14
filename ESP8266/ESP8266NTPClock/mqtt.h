@@ -38,7 +38,7 @@ void mqtt_setup() {
   if (client.connect("ESP8266Client")) {
     Serial.println("connected");
 
-    mqtt.subscribe("/home/basement/BME680", topic_subscriber);
+    mqtt.subscribe("/home/basement/BME280", topic_subscriber);
   } else {
     Serial.println(s+"failed, rc="+client.state());
   }
@@ -60,13 +60,16 @@ const char *getTemp() {
   // T63.64,H37.72,P1035.76
   static char buffer[20];
   String tempString = "";
+  String presString = "";
 
   if (weatherData.length() != 0)
   {
     Serial.println(s+"weather data: "+weatherData);
     int tempLoc = weatherData.indexOf("T");
     int humLoc = weatherData.indexOf("H");
-    tempString = weatherData.substring(tempLoc+1, humLoc-1);// + char(247);
+    int presLoc = weatherData.indexOf("P");
+    tempString = weatherData.substring(tempLoc+1, humLoc-1);
+    presString = weatherData.substring(presLoc+1, weatherData.length());
     float tempFloat = round(tempString.toFloat());
     tempString = String((int)tempFloat);
     tempString += char(247);
@@ -75,6 +78,7 @@ const char *getTemp() {
     tempString = "--";
   }
   Serial.println(s+"temp data: "+tempString);
+  Serial.println(s+"pres data: "+presString);
   tempString.toCharArray(buffer, tempString.length()+1);
   return buffer;
 }

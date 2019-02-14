@@ -82,7 +82,7 @@ void drawClockFace(const char *dwStr,   const char *dstStr,   const char *dateSt
   //drawCenteredText(54, 2, dateStr, COLOR_RED);
 
   // Draw centered time string
-  drawCenteredText(60, 5, timeStr, COLOR_RED);
+  drawCenteredText(65, 5, timeStr, COLOR_RED);
 
   // Draw centered title string
   drawCenteredText(116, 1, titleStr, COLOR_BLUE);
