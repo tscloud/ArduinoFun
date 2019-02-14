@@ -11,8 +11,9 @@
 #include <PubSubClient.h>
 #include <PubSubClientTools.h>
 
-#include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
-#include <ThreadController.h>
+// only need this for publishing?
+//#include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
+//#include <ThreadController.h>
 
 #define MQTT_SERVER "bigasspi.fios-router.home"
 
