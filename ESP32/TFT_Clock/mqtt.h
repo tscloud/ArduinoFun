@@ -15,7 +15,13 @@
 //#include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
 //#include <ThreadController.h>
 
+// MQTT defines
 #define MQTT_SERVER "bigasspi.fios-router.home"
+#define MQTT_CLIENT "ESP8266Client"
+#define MQTT_SUB "/home/basement/BME280"
+
+// compensation factors - sensor too close to house?
+#define COMP_TEMP -7
 
 WiFiClient espClient;
 PubSubClient client(MQTT_SERVER, 1883, espClient);
@@ -37,10 +43,10 @@ void mqtt_setup() {
   // the stuff we need to do to set up mqtt
   // Connect to MQTT
   Serial.print(s+"Connecting to MQTT: "+MQTT_SERVER+" ... ");
-  if (client.connect("ESP8266Client")) {
+  if (client.connect(MQTT_CLIENT)) {
     Serial.println("connected");
 
-    mqtt.subscribe("/home/basement/BME280", topic_subscriber);
+    mqtt.subscribe(MQTT_SUB, topic_subscriber);
   } else {
     Serial.println(s+"failed, rc="+client.state());
   }
@@ -76,14 +82,16 @@ const char *getTemp() {
     tempString = weatherData.substring(tempLoc+1, humLoc-1);
     humString = weatherData.substring(humLoc+1, presLoc-1);
     presString = weatherData.substring(presLoc+1, weatherData.length());
-    // format temp
-    float tempFloat = round(tempString.toFloat());
+    // format temp - apply compensation
+    float tempFloat = round(tempString.toFloat()) + COMP_TEMP;
     tempString = String((int)tempFloat);
-    tempString += char(247);// degree symbol
+    tempString += char(127);// degree symbol
     // format humidity
     float humFloat = round(humString.toFloat());
     humString = String((int)humFloat);
-    humString += char(247);// percent symbol <- find/make
+    //humString += char(247);// percent symbol <- find/make
+    // build weather
+    tempString = tempString + " " + humString + " " +presString;
   }
   else {
     tempString = "--";

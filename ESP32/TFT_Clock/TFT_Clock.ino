@@ -74,7 +74,6 @@ void getTime() {
     if (ntpHours < 10) {
       strHours = "0"+strHours;
     }
-
     if (ntpMinutes < 10) {
       strMinutes = "0"+strMinutes;
     }
@@ -90,7 +89,7 @@ void getTime() {
     //tft.setFreeFont(FSB12);                              // Select the font
     tft.setTextDatum(TC_DATUM); // Centre text on x,y position
     //tft.drawString(getTemp(), 80, 80, GFXFF);  // Draw the text string in the selected GFX free font
-    tft.drawString(getTemp(), 80, 80, 7);  // Draw the text string in the selected GFX free font
+    tft.drawString(getTemp(), 80, 80, 4);  // Draw the text string in the selected GFX free font
 
   }
 
