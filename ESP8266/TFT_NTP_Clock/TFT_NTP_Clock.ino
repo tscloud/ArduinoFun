@@ -39,7 +39,7 @@ void setup(){
 
   // TFT setup
   tft.init();
-  tft.setRotation(1);
+  tft.setRotation(3);
   tft.fillScreen(TFT_BLACK);
 
   // Do MQTT setup
@@ -82,14 +82,16 @@ void getTime() {
 
     // --draw time--
     //tft.drawCentreString(timeClient.getFormattedTime(), 80, 54, 4); // Draw text centre at position 80, 24 using font 6
+    tft.setTextSize(1);;
     tft.setTextDatum(BC_DATUM); // Centre text on x,y position
-    tft.drawString(timeString, 80, 54, 7);  // Draw the text string in the selected GFX free font
+    tft.drawString(timeString, 160, 54, 8);  // Draw the text string in the selected GFX free font
 
     // --draw weather--
     //tft.setFreeFont(FSB12);                              // Select the font
+    tft.setTextSize(2);
     tft.setTextDatum(TC_DATUM); // Centre text on x,y position
     //tft.drawString(getTemp(), 80, 80, GFXFF);  // Draw the text string in the selected GFX free font
-    tft.drawString(getTemp(), 80, 80, 4);  // Draw the text string in the selected GFX free font
+    tft.drawString(getTemp(), 160, 150, 4);  // Draw the text string in the selected GFX free font
 
   }
 

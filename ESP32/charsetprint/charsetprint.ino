@@ -46,7 +46,7 @@ void setup() {
   //listFiles(); // Lists the files so you can see what is in the SPIFFS
 
   tft.init();
-  tft.setRotation(0);  // portrait
+  tft.setRotation(2);
 
   fg = TFT_WHITE;
   bg = TFT_BLACK;
@@ -55,17 +55,21 @@ void setup() {
   // Load a smooth font from SPIFFS
   tft.loadFont("Latin-Hiragana-24");
 
-  tft.setRotation(1);
   tft.fillScreen(bg);
 
   tft.setCursor(0,0);
-  tft.print(char(0x5000));
-  //tft.print("hello");
+  tft.println(char(36));
+  tft.print("hello");
+
+  //for (int i = 400; i < 600; ++i)
+  //{
+  //  tft.print(char(i));
+  //}
 
 }
 void loop() {
   // Show all characters on screen with 2 second (2000ms) delay between screens
-  tft.showFont(2000); // Note: This function moves the cursor position!
-  delay(2000);
+  //tft.showFont(2000); // Note: This function moves the cursor position!
+  //delay(2000);
 
 }
