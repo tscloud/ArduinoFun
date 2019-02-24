@@ -6,7 +6,7 @@
 #include <WiFiUdp.h>
 #include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
 #include <SPI.h>
-//#include "Free_Fonts.h" // Include the header file attached to this sketch
+#include "Free_Fonts.h" // Include the header file attached to this sketch
 // MQTT header to get weather data
 #include "mqtt.h"
 
@@ -87,11 +87,11 @@ void getTime() {
     tft.drawString(timeString, 160, 54, 8);  // Draw the text string in the selected GFX free font
 
     // --draw weather--
-    //tft.setFreeFont(FSB12);                              // Select the font
-    tft.setTextSize(2);
+    tft.setFreeFont(FSS18);                              // Select the font
+    tft.setTextSize(1);
     tft.setTextDatum(TC_DATUM); // Centre text on x,y position
-    //tft.drawString(getTemp(), 80, 80, GFXFF);  // Draw the text string in the selected GFX free font
-    tft.drawString(getTemp(), 160, 150, 4);  // Draw the text string in the selected GFX free font
+    tft.drawString(getTemp(), 160, 150, GFXFF);  // Draw the text string in the selected GFX free font
+    //tft.drawString(getTemp(), 160, 150, 4);  // Draw the text string in the selected GFX free font
 
   }
 

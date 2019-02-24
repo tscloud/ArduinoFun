@@ -106,6 +106,7 @@ PROGMEM const unsigned char chr_f32_27[] =
 };
 /*
 //Changed to degree symbol for temperature display
+// -not needed- see chr_f32_60 or char(96)
 PROGMEM const unsigned char chr_f32_27[] =
 {
 0x17, 0x82, 0x04, 0x86, 0x02, 0x81, 0x02, 0x81,

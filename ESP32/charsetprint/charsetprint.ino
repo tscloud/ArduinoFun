@@ -13,26 +13,23 @@ uint16_t fg = TFT_WHITE;
 
 void setup() {
   // TFT setup
-  /*
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);
 
-  //tft.setTextFont(4);
-  tft.setTextColor(TFT_YELLOW);
+  tft.setTextFont(4);
+  //tft.setTextColor(TFT_YELLOW);
   //tft.setCursor(0, 15);    // Set cursor near top left corner of screen
   //tft.setFreeFont(FM9);// Select the font
-  tft.setTextFont(2);
 
-  for (int i = 0; i < 60; ++i)
+  for (int i = 0; i < 250; ++i)
   {
-    tft.print(char(i+100));
+    tft.print(char(i));
   }
   //tft.drawChar(127, 80, 64, 2);
-  //tft.print(char(127));
+  tft.print(char(0x2d));
   //tft.print("Y");
-  */
-
+/*
   Serial.begin(115200); // Used for messages and the C array generator
 
   Serial.println("NodeMCU vlw font test!");
@@ -65,7 +62,7 @@ void setup() {
   //{
   //  tft.print(char(i));
   //}
-
+*/
 }
 void loop() {
   // Show all characters on screen with 2 second (2000ms) delay between screens

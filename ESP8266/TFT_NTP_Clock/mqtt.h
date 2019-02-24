@@ -85,13 +85,15 @@ const char *getTemp() {
     // format temp - apply compensation
     float tempFloat = round(tempString.toFloat()) + COMP_TEMP;
     tempString = String((int)tempFloat);
-    tempString += char(127);// degree symbol
+    //tempString += char(96);// degree symbol
+    tempString += char(0x7E);// degree symbol
     // format humidity
     float humFloat = round(humString.toFloat());
     humString = String((int)humFloat);
-    //humString += char(247);// percent symbol <- find/make
+    //humString += char(37);// percent symbol
+    humString += char(0x25);// percent symbol
     // build weather
-    tempString = tempString + " " + humString + " " +presString;
+    tempString = tempString + " " + humString + " " +presString+char(0x7C);
   }
   else {
     tempString = "--";
