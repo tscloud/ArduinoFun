@@ -22,6 +22,9 @@
 
 // compensation factors - sensor too close to house?
 #define COMP_TEMP -7
+// bounds to determine pressure change
+#define P_RADIP_CHANGE 6.1
+#define P_CHANGE .1
 
 WiFiClient espClient;
 PubSubClient client(MQTT_SERVER, 1883, espClient);
@@ -33,6 +36,10 @@ PubSubClientTools mqtt(client);
 
 String s = "";
 String weatherData = "";
+
+// pressure stuff
+float lastPressure = 0;
+String lastIndicator = "--";
 
 void topic_subscriber(String topic, String message) {
   Serial.println(s+"Message arrived in function 1 ["+topic+"] "+message);
@@ -64,15 +71,15 @@ void mqtt_loop() {
 }
 
 // Get weather data from MQTT subscription
-const char *getTemp() {
+const char *getWeather(bool doPChange) {
   // T63.64,H37.72,P1035.76
   static char buffer[20];
   String tempString = "";
   String humString = "";
   String presString = "";
+  String presIndicator = "--";
 
-  if (weatherData.length() != 0)
-  {
+  if (weatherData.length() != 0) {
     Serial.println(s+"weather data: "+weatherData);
     // positions of each data type
     int tempLoc = weatherData.indexOf("T");
@@ -92,17 +99,40 @@ const char *getTemp() {
     humString = String((int)humFloat);
     //humString += char(37);// percent symbol
     humString += char(0x25);// percent symbol
+    // format pressure
+    float pressFloat = presString.toFloat();
+
+    // let's make a pressure indicator
+    if (lastPressure != 0) {
+      //set initial pressure
+      lastPressure = pressFloat;
+    }
+    else if (doPChange) {
+      float pressureChange = abs((pressFloat - lastPressure));
+      if (pressureChange >= P_RADIP_CHANGE) {
+        //changing rapidly
+        Serial.println("pressure changing rapidly");
+      }
+      else if (pressureChange >= P_CHANGE) {
+        //changing slowly
+        Serial.println("pressure changing slowly");
+      }
+      else {
+        //steady
+        Serial.println("pressure steady");
+      }
+    }
+
     // build weather
-    tempString = tempString + " " + humString + " " +presString+char(0x7C);
+    //tempString = tempString + " " + humString + " " +presString+char(0x7C);
+    tempString = tempString + " " + humString + " " +presString+lastIndicator;
+
+    Serial.println(s+"temp data: "+tempString);
+    Serial.println(s+"hum data: "+humString);
+    Serial.println(s+"pres data: "+presString);
+    tempString.toCharArray(buffer, tempString.length()+1);
+    return buffer;
   }
-  else {
-    tempString = "--";
-  }
-  Serial.println(s+"temp data: "+tempString);
-  Serial.println(s+"hum data: "+humString);
-  Serial.println(s+"pres data: "+presString);
-  tempString.toCharArray(buffer, tempString.length()+1);
-  return buffer;
 }
 
 #endif

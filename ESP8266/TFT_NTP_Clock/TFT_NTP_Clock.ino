@@ -10,6 +10,8 @@
 // MQTT header to get weather data
 #include "mqtt.h"
 
+// used to determine if we have to chack for pressure change rate
+#define PRESS_CHECK_INT 360
 
 const char *ssid     = "gosox";
 const char *password = "15courthouselane";
@@ -24,6 +26,9 @@ NTPClient timeClient(ntpUDP, "us.pool.ntp.org", -18000, 60000);
 TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
 
 int checkMin = -1;
+
+// used to determine if we have to chack for pressure change rate
+int pressMin = 0;
 
 void setup(){
   Serial.begin(115200);
@@ -62,6 +67,9 @@ void loop() {
 
 // return time to display
 void getTime() {
+  // do we check for pressure change rate?
+  bool pChange = false;
+
   int ntpMinutes = timeClient.getMinutes();
 
   if (ntpMinutes != checkMin) {
@@ -80,6 +88,15 @@ void getTime() {
 
     String timeString = strHours + ":" + strMinutes;
 
+    // do pressure stuff
+    if (pressMin > PRESS_CHECK_INT) {
+      pChange = true;
+      pressMin = 0;
+    }
+    else {
+      pChange = false;
+    }
+
     // --draw time--
     //tft.drawCentreString(timeClient.getFormattedTime(), 80, 54, 4); // Draw text centre at position 80, 24 using font 6
     tft.setTextSize(1);;
@@ -90,7 +107,7 @@ void getTime() {
     tft.setFreeFont(FSS18);                              // Select the font
     tft.setTextSize(1);
     tft.setTextDatum(TC_DATUM); // Centre text on x,y position
-    tft.drawString(getTemp(), 160, 150, GFXFF);  // Draw the text string in the selected GFX free font
+    tft.drawString(getWeather(pChange), 160, 150, GFXFF);  // Draw the text string in the selected GFX free font
     //tft.drawString(getTemp(), 160, 150, 4);  // Draw the text string in the selected GFX free font
 
   }
