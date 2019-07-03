@@ -1,5 +1,5 @@
 # ArduinoJson - arduinojson.org
-# Copyright Benoit Blanchon 2014-2018
+# Copyright Benoit Blanchon 2014-2019
 # MIT License
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
@@ -24,7 +24,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
 		-Wshadow
 		-Wsign-promo
 		-Wstrict-aliasing
-		-Wstrict-overflow=5
 		-Wundef
 	)
 

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -14,11 +14,6 @@ void objectAccept(const CollectionData *obj, Visitor &visitor) {
     visitor.visitObject(*obj);
   else
     visitor.visitNull();
-}
-
-template <typename TAdaptedString>
-inline bool objectContainsKey(const CollectionData *obj, TAdaptedString key) {
-  return obj && obj->containsKey(key);
 }
 
 inline bool objectEquals(const CollectionData *lhs, const CollectionData *rhs) {

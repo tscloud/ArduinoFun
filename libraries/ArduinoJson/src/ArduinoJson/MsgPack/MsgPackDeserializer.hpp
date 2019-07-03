@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -17,7 +17,6 @@ template <typename TReader, typename TStringStorage>
 class MsgPackDeserializer {
   typedef typename remove_reference<TStringStorage>::type::StringBuilder
       StringBuilder;
-  typedef const char *StringType;
 
  public:
   MsgPackDeserializer(MemoryPool &pool, TReader reader,
@@ -80,8 +79,7 @@ class MsgPackDeserializer {
 #if ARDUINOJSON_USE_LONG_LONG
         return readInteger<uint64_t>(variant);
 #else
-        readInteger<uint32_t>();
-        return readInteger<uint32_t>(variant);
+        return DeserializationError::NotSupported;
 #endif
 
       case 0xd0:
@@ -97,8 +95,7 @@ class MsgPackDeserializer {
 #if ARDUINOJSON_USE_LONG_LONG
         return readInteger<int64_t>(variant);
 #else
-        if (!skip(4)) return DeserializationError::IncompleteInput;
-        return readInteger<int32_t>(variant);
+        return DeserializationError::NotSupported;
 #endif
 
       case 0xca:
@@ -137,17 +134,10 @@ class MsgPackDeserializer {
   // Prevent VS warning "assignment operator could not be generated"
   MsgPackDeserializer &operator=(const MsgPackDeserializer &);
 
-  bool skip(uint8_t n) {
-    while (n--) {
-      if (_reader.ended()) return false;
-      _reader.read();
-    }
-    return true;
-  }
-
   bool readByte(uint8_t &value) {
-    if (_reader.ended()) return false;
-    value = static_cast<uint8_t>(_reader.read());
+    int c = _reader.read();
+    if (c < 0) return false;
+    value = static_cast<uint8_t>(c);
     return true;
   }
 
@@ -227,20 +217,20 @@ class MsgPackDeserializer {
   }
 
   template <typename T>
-  DeserializationError readString(StringType &str) {
+  DeserializationError readString(const char *&str) {
     T size;
     if (!readInteger(size)) return DeserializationError::IncompleteInput;
     return readString(str, size);
   }
 
   DeserializationError readString(VariantData &variant, size_t n) {
-    StringType s;
+    const char *s;
     DeserializationError err = readString(s, n);
-    if (!err) variant.setOwnedString(s);
+    if (!err) variant.setOwnedString(make_not_null(s));
     return err;
   }
 
-  DeserializationError readString(StringType &result, size_t n) {
+  DeserializationError readString(const char *&result, size_t n) {
     StringBuilder builder = _stringStorage.startString();
     for (; n; --n) {
       uint8_t c;
@@ -287,10 +277,10 @@ class MsgPackDeserializer {
       VariantSlot *slot = object.addSlot(_pool);
       if (!slot) return DeserializationError::NoMemory;
 
-      StringType key;
+      const char *key;
       DeserializationError err = parseKey(key);
       if (err) return err;
-      slot->setOwnedKey(key);
+      slot->setOwnedKey(make_not_null(key));
 
       err = parse(*slot->data());
       if (err) return err;
@@ -299,7 +289,7 @@ class MsgPackDeserializer {
     return DeserializationError::Ok;
   }
 
-  DeserializationError parseKey(StringType &key) {
+  DeserializationError parseKey(const char *&key) {
     uint8_t code;
     if (!readByte(code)) return DeserializationError::IncompleteInput;
 

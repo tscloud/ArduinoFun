@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #include <ArduinoJson.h>
@@ -146,5 +146,17 @@ TEST_CASE("JsonVariant::is()") {
 
   SECTION("string") {
     testString("42");
+  }
+
+  SECTION("null") {
+    DynamicJsonDocument doc(4096);
+    deserializeJson(doc, "[null]");
+    JsonVariant v = doc[0];
+
+    REQUIRE(v.is<bool>() == false);
+    REQUIRE(v.is<char *>() == false);
+    REQUIRE(v.is<int>() == false);
+    REQUIRE(v.is<std::string>() == false);
+    REQUIRE(v.is<float>() == false);
   }
 }

@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #include <ArduinoJson.h>
@@ -11,6 +11,6 @@ TEST_CASE("JsonArray::get()") {
   JsonArray array = doc.as<JsonArray>();
 
   SECTION("Overflow") {
-    REQUIRE(array.get(3).isNull());
+    REQUIRE(array.getElement(3).isNull());
   }
 }

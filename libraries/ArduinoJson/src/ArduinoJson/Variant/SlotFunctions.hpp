@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -15,11 +15,11 @@ template <typename TAdaptedString>
 inline bool slotSetKey(VariantSlot* var, TAdaptedString key, MemoryPool* pool) {
   if (!var) return false;
   if (key.isStatic()) {
-    var->setLinkedKey(key.data());
+    var->setLinkedKey(make_not_null(key.data()));
   } else {
-    char* dup = key.save(pool);
+    const char* dup = key.save(pool);
     if (!dup) return false;
-    var->setOwnedKey(dup);
+    var->setOwnedKey(make_not_null(dup));
   }
   return true;
 }
@@ -31,5 +31,9 @@ inline size_t slotSize(const VariantSlot* var) {
     var = var->next();
   }
   return n;
+}
+
+inline VariantData* slotData(VariantSlot* slot) {
+  return reinterpret_cast<VariantData*>(slot);
 }
 }  // namespace ARDUINOJSON_NAMESPACE

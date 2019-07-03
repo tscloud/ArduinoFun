@@ -25,14 +25,15 @@
 //#define ILI9481_DRIVER
 //#define ILI9486_DRIVER
 //#define ILI9488_DRIVER     // WARNING: Do not connect ILI9488 display SDO to MISO if other devices share the SPI bus (TFT SDO does NOT tristate when CS is high)
-//#define ST7789_DRIVER      // Define additional parameters below for this display
+//#define ST7789_DRIVER      // Full configuration option, define additional parameters below for this display
+//#define ST7789_2_DRIVER    // Minimal configuration option, define additional parameters below for this display
 //#define R61581_DRIVER
 
 // Some displays support SPI reads via the MISO pin, other displays have a single
 // bi-directional SDA pin and the library will try to read this via the MOSI line.
 // To use the SDA line for reading data from the TFT uncomment the following line:
 
-// #define TFT_SDA_READ      // This option if for ESP32 ONLY, tested with ST7789 display only
+// #define TFT_SDA_READ      // This option is for ESP32 ONLY, tested with ST7789 display only
 
 // For ST7789 ONLY, define the colour order IF the blue and red are swapped on your display
 // Try ONE option at a time to find the correct colour order for your display
@@ -47,11 +48,11 @@
 // For ST7789, ST7735 and ILI9163 ONLY, define the pixel width and height in portrait orientation
 // #define TFT_WIDTH  80
 // #define TFT_WIDTH  128
- #define TFT_WIDTH  240 // ST7789 240 x 240 and 240 x 320
+// #define TFT_WIDTH  240 // ST7789 240 x 240 and 240 x 320
 // #define TFT_HEIGHT 160
 // #define TFT_HEIGHT 128
 // #define TFT_HEIGHT 240 // ST7789 240 x 240
- #define TFT_HEIGHT 320 // ST7789 240 x 320
+// #define TFT_HEIGHT 320 // ST7789 240 x 320
 
 // For ST7735 ONLY, define the type of display, originally this was based on the
 // colour of the tab on the screen protector film but this is not always true, so try
@@ -114,7 +115,6 @@
 //
 // The NodeMCU D0 pin can be used for RST
 //
-// See Section 2. below if DC or CS is connected to D0
 //
 // Note: only some versions of the NodeMCU provide the USB 5V on the VIN pin
 // If 5V is not available at a pin you can use 3.3V but backlight brightness
@@ -124,9 +124,9 @@
 // ###### EDIT THE PIN NUMBERS IN THE LINES FOLLOWING TO SUIT YOUR ESP8266 SETUP ######
 
 // For NodeMCU - use pin numbers in the form PIN_Dx where Dx is the NodeMCU pin designation
-//#define TFT_CS   PIN_D8  // Chip select control pin D8
-//#define TFT_DC   PIN_D3  // Data Command control pin
-//#define TFT_RST  PIN_D4  // Reset pin (could connect to NodeMCU RST, see next line)
+#define TFT_CS   PIN_D8  // Chip select control pin D8
+#define TFT_DC   PIN_D3  // Data Command control pin
+#define TFT_RST  PIN_D4  // Reset pin (could connect to NodeMCU RST, see next line)
 //#define TFT_RST  -1    // Set TFT_RST to -1 if the display RESET is connected to NodeMCU RST or 3.3V
 
 //#define TFT_BL PIN_D1  // LED back-light (only for ST7789 with backlight control pin)
@@ -160,10 +160,10 @@
 //#define TFT_MISO 19
 //#define TFT_MOSI 23
 //#define TFT_SCLK 18
-#define TFT_CS   5  // Chip select control pin
-#define TFT_DC   4  // Data Command control pin
+//#define TFT_CS   15  // Chip select control pin
+//#define TFT_DC    2  // Data Command control pin
 //#define TFT_RST   4  // Reset pin (could connect to RST pin)
-#define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
+//#define TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
 
 //#define TFT_BL   32  // LED back-light (only for ST7789 with backlight control pin)
 
@@ -252,8 +252,8 @@
 // #define SPI_FREQUENCY   5000000
 // #define SPI_FREQUENCY  10000000
 // #define SPI_FREQUENCY  20000000
-// #define SPI_FREQUENCY  27000000 // Actually sets it to 26.67MHz = 80/3
- #define SPI_FREQUENCY  40000000 // Maximum to use SPIFFS
+#define SPI_FREQUENCY  27000000 // Actually sets it to 26.67MHz = 80/3
+// #define SPI_FREQUENCY  40000000 // Maximum to use SPIFFS
 // #define SPI_FREQUENCY  80000000
 
 // Optional reduced SPI frequency for reading TFT

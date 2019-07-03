@@ -1,11 +1,12 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
 
 #include <stddef.h>  // size_t
 #include <string.h>  // strcmp
+#include "../Polyfills/safe_strcmp.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
 
@@ -13,10 +14,12 @@ class ConstRamStringAdapter {
  public:
   ConstRamStringAdapter(const char* str = 0) : _str(str) {}
 
+  int8_t compare(const char* other) const {
+    return safe_strcmp(_str, other);
+  }
+
   bool equals(const char* expected) const {
-    const char* actual = _str;
-    if (!actual || !expected) return actual == expected;
-    return strcmp(actual, expected) == 0;
+    return compare(expected) == 0;
   }
 
   bool isNull() const {
@@ -29,6 +32,7 @@ class ConstRamStringAdapter {
   }
 
   size_t size() const {
+    if (!_str) return 0;
     return strlen(_str);
   }
 

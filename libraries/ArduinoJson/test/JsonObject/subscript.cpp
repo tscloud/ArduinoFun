@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #include <ArduinoJson.h>
@@ -161,7 +161,7 @@ TEST_CASE("JsonObject::operator[]") {
     obj[null] = 666;
 
     REQUIRE(obj.size() == 1);
-    REQUIRE(obj[null] == 0);
+    REQUIRE(obj[null] == null);
   }
 
   SECTION("obj[key].to<JsonArray>()") {

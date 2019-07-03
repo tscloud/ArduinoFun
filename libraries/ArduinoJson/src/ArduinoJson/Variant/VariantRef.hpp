@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -9,8 +9,6 @@
 
 #include "../Memory/MemoryPool.hpp"
 #include "../Misc/Visitable.hpp"
-#include "../Numbers/parseFloat.hpp"
-#include "../Numbers/parseInteger.hpp"
 #include "../Operators/VariantOperators.hpp"
 #include "../Polyfills/type_traits.hpp"
 #include "VariantAs.hpp"
@@ -45,7 +43,7 @@ class VariantRefBase {
   template <typename T>
   FORCE_INLINE typename enable_if<is_integral<T>::value, bool>::type is()
       const {
-    return variantIsInteger(_data);
+    return variantIsInteger<T>(_data);
   }
   //
   // bool is<double>() const;
@@ -98,6 +96,10 @@ class VariantRefBase {
     return variantIsNull(_data);
   }
 
+  FORCE_INLINE bool isUndefined() const {
+    return !_data;
+  }
+
   FORCE_INLINE size_t memoryUsage() const {
     return _data ? _data->memoryUsage() : 0;
   }
@@ -135,6 +137,10 @@ class VariantRef : public VariantRefBase<VariantData>,
 
   // Creates an uninitialized VariantRef
   FORCE_INLINE VariantRef() : base_type(0), _pool(0) {}
+
+  FORCE_INLINE void clear() const {
+    return variantSetNull(_data);
+  }
 
   // set(bool value)
   FORCE_INLINE bool set(bool value) const {
@@ -280,36 +286,54 @@ class VariantRef : public VariantRefBase<VariantData>,
   typename enable_if<is_same<T, VariantRef>::value, VariantRef>::type to()
       const;
 
-  VariantRef add() const;
-  using ArrayShortcuts::add;
+  VariantRef addElement() const;
 
-  FORCE_INLINE VariantRef get(size_t) const;
+  FORCE_INLINE VariantRef getElement(size_t) const;
 
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  // getMember(const char*) const
+  // getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef get(TChar *) const;
+  FORCE_INLINE VariantRef getMember(TChar *) const;
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // getMember(const std::string&) const
+  // getMember(const String&) const
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
-  get(const TString &) const;
+  getMember(const TString &) const;
 
-  // getOrCreate(char*) const
-  // getOrCreate(const char*) const
-  // getOrCreate(const __FlashStringHelper*) const
+  // getOrAddMember(char*) const
+  // getOrAddMember(const char*) const
+  // getOrAddMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrCreate(TChar *) const;
+  FORCE_INLINE VariantRef getOrAddMember(TChar *) const;
 
-  // getOrCreate(const std::string&) const
-  // getOrCreate(const String&) const
+  // getOrAddMember(const std::string&) const
+  // getOrAddMember(const String&) const
   template <typename TString>
-  FORCE_INLINE VariantRef getOrCreate(const TString &) const;
+  FORCE_INLINE VariantRef getOrAddMember(const TString &) const;
+
+  FORCE_INLINE void remove(size_t index) const {
+    if (_data) _data->remove(index);
+  }
+  // remove(char*) const
+  // remove(const char*) const
+  // remove(const __FlashStringHelper*) const
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar *>::value>::type remove(
+      TChar *key) const {
+    if (_data) _data->remove(adaptString(key));
+  }
+  // remove(const std::string&) const
+  // remove(const String&) const
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
+      const TString &key) const {
+    if (_data) _data->remove(adaptString(key));
+  }
 
  private:
   MemoryPool *_pool;
-};
+};  // namespace ARDUINOJSON_NAMESPACE
 
 class VariantConstRef : public VariantRefBase<const VariantData>,
                         public VariantOperators<VariantConstRef>,

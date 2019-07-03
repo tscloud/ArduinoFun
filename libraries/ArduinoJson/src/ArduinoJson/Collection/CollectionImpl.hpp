@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -26,7 +26,7 @@ inline VariantSlot* CollectionData::addSlot(MemoryPool* pool) {
 }
 
 inline VariantData* CollectionData::add(MemoryPool* pool) {
-  return addSlot(pool)->data();
+  return slotData(addSlot(pool));
 }
 
 template <typename TAdaptedString>

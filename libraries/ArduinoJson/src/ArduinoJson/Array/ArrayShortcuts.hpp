@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -29,14 +29,14 @@ class ArrayShortcuts {
   //          std::string, String, ObjectRef
   template <typename T>
   FORCE_INLINE bool add(const T &value) const {
-    return impl()->add().set(value);
+    return impl()->addElement().set(value);
   }
   //
   // bool add(TValue);
   // TValue = char*, const char*, const __FlashStringHelper*
   template <typename T>
   FORCE_INLINE bool add(T *value) const {
-    return impl()->add().set(value);
+    return impl()->addElement().set(value);
   }
 
  private:

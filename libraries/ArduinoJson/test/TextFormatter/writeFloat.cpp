@@ -1,11 +1,13 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #include <catch.hpp>
 #include <limits>
 #include <string>
 
+#define ARDUINOJSON_ENABLE_NAN 1
+#define ARDUINOJSON_ENABLE_INFINITY 1
 #include <ArduinoJson/Json/TextFormatter.hpp>
 #include <ArduinoJson/Serialization/DynamicStringWriter.hpp>
 

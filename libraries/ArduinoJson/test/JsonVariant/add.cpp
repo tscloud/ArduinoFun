@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #include <ArduinoJson.h>
@@ -11,13 +11,6 @@ static const char* null = 0;
 TEST_CASE("JsonVariant::add()") {
   DynamicJsonDocument doc(4096);
   JsonVariant var = doc.to<JsonVariant>();
-
-  SECTION("No argument") {
-    JsonVariant nested = var.add();
-
-    REQUIRE(var.is<JsonArray>() == true);
-    REQUIRE(nested.isNull() == true);
-  }
 
   SECTION("integer") {
     var.add(42);

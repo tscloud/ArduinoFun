@@ -1,10 +1,12 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
 
 #include "../Misc/SerializedValue.hpp"
+#include "../Numbers/convertNumber.hpp"
+#include "../Polyfills/gsl/not_null.hpp"
 #include "VariantContent.hpp"
 
 namespace ARDUINOJSON_NAMESPACE {
@@ -62,9 +64,7 @@ class VariantData {
 
   const char *asString() const;
 
-  bool asBoolean() const {
-    return asIntegral<int>() != 0;
-  }
+  bool asBoolean() const;
 
   CollectionData *asArray() {
     return isArray() ? &_content.asCollection : 0;
@@ -146,9 +146,18 @@ class VariantData {
     return (_flags & COLLECTION_MASK) != 0;
   }
 
+  template <typename T>
   bool isInteger() const {
-    return type() == VALUE_IS_POSITIVE_INTEGER ||
-           type() == VALUE_IS_NEGATIVE_INTEGER;
+    switch (type()) {
+      case VALUE_IS_POSITIVE_INTEGER:
+        return canStorePositiveInteger<T>(_content.asInteger);
+
+      case VALUE_IS_NEGATIVE_INTEGER:
+        return canStoreNegativeInteger<T>(_content.asInteger);
+
+      default:
+        return false;
+    }
   }
 
   bool isFloat() const {
@@ -168,6 +177,19 @@ class VariantData {
     return type() == VALUE_IS_NULL;
   }
 
+  bool isEnclosed() const {
+    return isCollection() || isString();
+  }
+
+  void remove(size_t index) {
+    if (isArray()) _content.asCollection.remove(index);
+  }
+
+  template <typename TAdaptedString>
+  void remove(TAdaptedString key) {
+    if (isObject()) _content.asCollection.remove(key);
+  }
+
   void setBoolean(bool value) {
     setType(VALUE_IS_BOOLEAN);
     _content.asInteger = static_cast<UInt>(value);
@@ -179,9 +201,13 @@ class VariantData {
   }
 
   void setLinkedRaw(SerializedValue<const char *> value) {
-    setType(VALUE_IS_LINKED_RAW);
-    _content.asRaw.data = value.data();
-    _content.asRaw.size = value.size();
+    if (value.data()) {
+      setType(VALUE_IS_LINKED_RAW);
+      _content.asRaw.data = value.data();
+      _content.asRaw.size = value.size();
+    } else {
+      setType(VALUE_IS_NULL);
+    }
   }
 
   template <typename T>
@@ -211,39 +237,53 @@ class VariantData {
   template <typename T>
   void setSignedInteger(T value) {
     if (value >= 0) {
-      setType(VALUE_IS_POSITIVE_INTEGER);
-      _content.asInteger = static_cast<UInt>(value);
+      setPositiveInteger(static_cast<UInt>(value));
     } else {
-      setType(VALUE_IS_NEGATIVE_INTEGER);
-      _content.asInteger = ~static_cast<UInt>(value) + 1;
+      setNegativeInteger(~static_cast<UInt>(value) + 1);
     }
   }
 
+  void setPositiveInteger(UInt value) {
+    setType(VALUE_IS_POSITIVE_INTEGER);
+    _content.asInteger = value;
+  }
+
+  void setNegativeInteger(UInt value) {
+    setType(VALUE_IS_NEGATIVE_INTEGER);
+    _content.asInteger = value;
+  }
+
   void setLinkedString(const char *value) {
-    setType(VALUE_IS_LINKED_STRING);
-    _content.asString = value;
+    if (value) {
+      setType(VALUE_IS_LINKED_STRING);
+      _content.asString = value;
+    } else {
+      setType(VALUE_IS_NULL);
+    }
   }
 
   void setNull() {
     setType(VALUE_IS_NULL);
   }
 
-  void setOwnedString(const char *s) {
+  void setOwnedString(not_null<const char *> s) {
     setType(VALUE_IS_OWNED_STRING);
-    _content.asString = s;
+    _content.asString = s.get();
   }
 
-  template <typename T>
-  bool setOwnedString(T value, MemoryPool *pool) {
-    char *dup = value.save(pool);
-    if (dup) {
-      setType(VALUE_IS_OWNED_STRING);
-      _content.asString = dup;
+  bool setOwnedString(const char *s) {
+    if (s) {
+      setOwnedString(make_not_null(s));
       return true;
     } else {
       setType(VALUE_IS_NULL);
       return false;
     }
+  }
+
+  template <typename T>
+  bool setOwnedString(T value, MemoryPool *pool) {
+    return setOwnedString(value.save(pool));
   }
 
   void setUnsignedInteger(UInt value) {
@@ -285,28 +325,28 @@ class VariantData {
     return isCollection() ? _content.asCollection.size() : 0;
   }
 
-  VariantData *get(size_t index) const {
+  VariantData *addElement(MemoryPool *pool) {
+    if (isNull()) toArray();
+    if (!isArray()) return 0;
+    return _content.asCollection.add(pool);
+  }
+
+  VariantData *getElement(size_t index) const {
     return isArray() ? _content.asCollection.get(index) : 0;
   }
 
   template <typename TAdaptedString>
-  VariantData *get(TAdaptedString key) const {
+  VariantData *getMember(TAdaptedString key) const {
     return isObject() ? _content.asCollection.get(key) : 0;
   }
 
   template <typename TAdaptedString>
-  VariantData *getOrCreate(TAdaptedString key, MemoryPool *pool) {
+  VariantData *getOrAddMember(TAdaptedString key, MemoryPool *pool) {
     if (isNull()) toObject();
     if (!isObject()) return 0;
     VariantData *var = _content.asCollection.get(key);
     if (var) return var;
     return _content.asCollection.add(key, pool);
-  }
-
-  VariantData *add(MemoryPool *pool) {
-    if (isNull()) toArray();
-    if (!isArray()) return 0;
-    return _content.asCollection.add(pool);
   }
 
  private:

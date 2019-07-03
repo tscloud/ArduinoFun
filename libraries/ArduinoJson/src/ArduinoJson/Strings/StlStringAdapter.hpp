@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -21,6 +21,11 @@ class StlStringAdapter {
 
   bool isNull() const {
     return false;
+  }
+
+  int8_t compare(const char* other) const {
+    if (!other) return 1;
+    return static_cast<int8_t>(_str->compare(other));
   }
 
   bool equals(const char* expected) const {

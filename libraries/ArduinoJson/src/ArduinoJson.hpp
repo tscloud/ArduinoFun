@@ -1,8 +1,16 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
+
+#ifndef ARDUINOJSON_DEBUG
+#ifdef __clang__
+#pragma clang system_header
+#elif defined __GNUC__
+#pragma GCC system_header
+#endif
+#endif
 
 #include "ArduinoJson/Namespace.hpp"
 
@@ -15,6 +23,7 @@
 
 #include "ArduinoJson/Array/ArrayImpl.hpp"
 #include "ArduinoJson/Array/ElementProxy.hpp"
+#include "ArduinoJson/Array/Utilities.hpp"
 #include "ArduinoJson/Collection/CollectionImpl.hpp"
 #include "ArduinoJson/Object/MemberProxy.hpp"
 #include "ArduinoJson/Object/ObjectImpl.hpp"
@@ -26,6 +35,8 @@
 #include "ArduinoJson/Json/PrettyJsonSerializer.hpp"
 #include "ArduinoJson/MsgPack/MsgPackDeserializer.hpp"
 #include "ArduinoJson/MsgPack/MsgPackSerializer.hpp"
+
+#include "ArduinoJson/compatibility.hpp"
 
 namespace ArduinoJson {
 typedef ARDUINOJSON_NAMESPACE::ArrayConstRef JsonArrayConst;
@@ -39,6 +50,8 @@ typedef ARDUINOJSON_NAMESPACE::String JsonString;
 typedef ARDUINOJSON_NAMESPACE::UInt JsonUInt;
 typedef ARDUINOJSON_NAMESPACE::VariantConstRef JsonVariantConst;
 typedef ARDUINOJSON_NAMESPACE::VariantRef JsonVariant;
+using ARDUINOJSON_NAMESPACE::BasicJsonDocument;
+using ARDUINOJSON_NAMESPACE::copyArray;
 using ARDUINOJSON_NAMESPACE::DeserializationError;
 using ARDUINOJSON_NAMESPACE::deserializeJson;
 using ARDUINOJSON_NAMESPACE::deserializeMsgPack;

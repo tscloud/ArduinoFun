@@ -5,9 +5,9 @@
 #include <Thread.h>             // https://github.com/ivanseidel/ArduinoThread
 #include <ThreadController.h>
 
-#define WIFI_SSID "gosox"
-#define WIFI_PASS "15courthouselane"
-#define MQTT_SERVER "bigasspi.fios-router.home"
+#define WIFI_SSID "........"
+#define WIFI_PASS "........"
+#define MQTT_SERVER "broker.mqtt-dashboard.com"
 
 WiFiClient espClient;
 PubSubClient client(MQTT_SERVER, 1883, espClient);
@@ -21,6 +21,7 @@ String s = "";
 
 void setup() {
   Serial.begin(115200);
+  Serial.println();
 
   // Connect to WiFi
   Serial.print(s+"Connecting to WiFi: "+WIFI_SSID+" ");
@@ -29,15 +30,16 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println(s+" connected with IP: "+WiFi.localIP());
+  Serial.println("connected");
 
   // Connect to MQTT
   Serial.print(s+"Connecting to MQTT: "+MQTT_SERVER+" ... ");
   if (client.connect("ESP8266Client")) {
     Serial.println("connected");
 
-    mqtt.subscribe("/home/basement/BME680", topic1_subscriber);
-    //mqtt.subscribe("test/inTopic2", topic2_subscriber);
+    mqtt.subscribe("test_in/foo/bar",  topic1_subscriber);
+    mqtt.subscribe("test_in/+/bar",    topic2_subscriber);
+    mqtt.subscribe("test_in/#",        topic3_subscriber);
   } else {
     Serial.println(s+"failed, rc="+client.state());
   }
@@ -55,11 +57,14 @@ void loop() {
 
 void publisher() {
   ++value;
-  mqtt.publish("test/outTopic", s+"hello world "+value);
+  mqtt.publish("test_out/hello_world", s+"Hello World! - No. "+value);
 }
 void topic1_subscriber(String topic, String message) {
   Serial.println(s+"Message arrived in function 1 ["+topic+"] "+message);
 }
 void topic2_subscriber(String topic, String message) {
   Serial.println(s+"Message arrived in function 2 ["+topic+"] "+message);
+}
+void topic3_subscriber(String topic, String message) {
+  Serial.println(s+"Message arrived in function 3 ["+topic+"] "+message);
 }

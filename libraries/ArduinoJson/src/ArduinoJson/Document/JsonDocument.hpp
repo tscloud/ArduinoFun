@@ -1,5 +1,5 @@
 // ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2018
+// Copyright Benoit Blanchon 2014-2019
 // MIT License
 
 #pragma once
@@ -57,6 +57,10 @@ class JsonDocument : public Visitable {
     return _pool.capacity();
   }
 
+  size_t size() const {
+    return _data.size();
+  }
+
   bool set(const JsonDocument& src) {
     return to<VariantRef>().set(src.as<VariantRef>());
   }
@@ -83,7 +87,7 @@ class JsonDocument : public Visitable {
   }
 
   ArrayRef createNestedArray() {
-    return add().to<ArrayRef>();
+    return addElement().to<ArrayRef>();
   }
 
   // createNestedArray(char*)
@@ -91,18 +95,18 @@ class JsonDocument : public Visitable {
   // createNestedArray(const __FlashStringHelper*)
   template <typename TChar>
   ArrayRef createNestedArray(TChar* key) {
-    return getOrCreate(key).template to<ArrayRef>();
+    return getOrAddMember(key).template to<ArrayRef>();
   }
 
   // createNestedArray(const std::string&)
   // createNestedArray(const String&)
   template <typename TString>
   ArrayRef createNestedArray(const TString& key) {
-    return getOrCreate(key).template to<ArrayRef>();
+    return getOrAddMember(key).template to<ArrayRef>();
   }
 
   ObjectRef createNestedObject() {
-    return add().to<ObjectRef>();
+    return addElement().to<ObjectRef>();
   }
 
   // createNestedObject(char*)
@@ -110,14 +114,29 @@ class JsonDocument : public Visitable {
   // createNestedObject(const __FlashStringHelper*)
   template <typename TChar>
   ObjectRef createNestedObject(TChar* key) {
-    return getOrCreate(key).template to<ObjectRef>();
+    return getOrAddMember(key).template to<ObjectRef>();
   }
 
   // createNestedObject(const std::string&)
   // createNestedObject(const String&)
   template <typename TString>
   ObjectRef createNestedObject(const TString& key) {
-    return getOrCreate(key).template to<ObjectRef>();
+    return getOrAddMember(key).template to<ObjectRef>();
+  }
+
+  // containsKey(char*) const
+  // containsKey(const char*) const
+  // containsKey(const __FlashStringHelper*) const
+  template <typename TChar>
+  bool containsKey(TChar* key) const {
+    return !getMember(key).isUndefined();
+  }
+
+  // containsKey(const std::string&) const
+  // containsKey(const String&) const
+  template <typename TString>
+  bool containsKey(const TString& key) const {
+    return !getMember(key).isUndefined();
   }
 
   // operator[](const std::string&)
@@ -146,7 +165,7 @@ class JsonDocument : public Visitable {
   FORCE_INLINE
       typename enable_if<IsString<TString>::value, VariantConstRef>::type
       operator[](const TString& key) const {
-    return getVariant()[key];
+    return getMember(key);
   }
 
   // operator[](char*) const
@@ -156,7 +175,7 @@ class JsonDocument : public Visitable {
   FORCE_INLINE
       typename enable_if<IsString<TChar*>::value, VariantConstRef>::type
       operator[](TChar* key) const {
-    return getVariant()[key];
+    return getMember(key);
   }
 
   FORCE_INLINE ElementProxy<JsonDocument&> operator[](size_t index) {
@@ -164,51 +183,72 @@ class JsonDocument : public Visitable {
   }
 
   FORCE_INLINE VariantConstRef operator[](size_t index) const {
-    return VariantConstRef(_data.get(index));
+    return getElement(index);
   }
 
-  FORCE_INLINE VariantRef get(size_t index) {
-    return VariantRef(&_pool, _data.get(index));
+  FORCE_INLINE VariantRef getElement(size_t index) {
+    return VariantRef(&_pool, _data.getElement(index));
   }
 
-  // get(char*) const
-  // get(const char*) const
-  // get(const __FlashStringHelper*) const
+  FORCE_INLINE VariantConstRef getElement(size_t index) const {
+    return VariantConstRef(_data.getElement(index));
+  }
+
+  // JsonVariantConst getMember(char*) const
+  // JsonVariantConst getMember(const char*) const
+  // JsonVariantConst getMember(const __FlashStringHelper*) const
   template <typename TChar>
-  FORCE_INLINE VariantRef get(TChar* key) {
-    return VariantRef(&_pool, _data.get(adaptString(key)));
+  FORCE_INLINE VariantConstRef getMember(TChar* key) const {
+    return VariantConstRef(_data.getMember(adaptString(key)));
   }
 
-  // get(const std::string&) const
-  // get(const String&) const
+  // JsonVariantConst getMember(const std::string&) const
+  // JsonVariantConst getMember(const String&) const
+  template <typename TString>
+  FORCE_INLINE
+      typename enable_if<IsString<TString>::value, VariantConstRef>::type
+      getMember(const TString& key) const {
+    return VariantConstRef(_data.getMember(adaptString(key)));
+  }
+
+  // JsonVariant getMember(char*)
+  // JsonVariant getMember(const char*)
+  // JsonVariant getMember(const __FlashStringHelper*)
+  template <typename TChar>
+  FORCE_INLINE VariantRef getMember(TChar* key) {
+    return VariantRef(&_pool, _data.getMember(adaptString(key)));
+  }
+
+  // JsonVariant getMember(const std::string&)
+  // JsonVariant getMember(const String&)
   template <typename TString>
   FORCE_INLINE typename enable_if<IsString<TString>::value, VariantRef>::type
-  get(const TString& key) {
-    return VariantRef(&_pool, _data.get(adaptString(key)));
+  getMember(const TString& key) {
+    return VariantRef(&_pool, _data.getMember(adaptString(key)));
   }
 
-  // getOrCreate(char*)
-  // getOrCreate(const char*)
-  // getOrCreate(const __FlashStringHelper*)
+  // getOrAddMember(char*)
+  // getOrAddMember(const char*)
+  // getOrAddMember(const __FlashStringHelper*)
   template <typename TChar>
-  FORCE_INLINE VariantRef getOrCreate(TChar* key) {
-    return VariantRef(&_pool, _data.getOrCreate(adaptString(key), &_pool));
+  FORCE_INLINE VariantRef getOrAddMember(TChar* key) {
+    return VariantRef(&_pool, _data.getOrAddMember(adaptString(key), &_pool));
   }
 
-  // getOrCreate(const std::string&)
-  // getOrCreate(const String&)
+  // getOrAddMember(const std::string&)
+  // getOrAddMember(const String&)
   template <typename TString>
-  FORCE_INLINE VariantRef getOrCreate(const TString& key) {
-    return VariantRef(&_pool, _data.getOrCreate(adaptString(key), &_pool));
+  FORCE_INLINE VariantRef getOrAddMember(const TString& key) {
+    return VariantRef(&_pool, _data.getOrAddMember(adaptString(key), &_pool));
   }
 
-  FORCE_INLINE VariantRef add() {
-    return VariantRef(&_pool, _data.add(&_pool));
+  FORCE_INLINE VariantRef addElement() {
+    return VariantRef(&_pool, _data.addElement(&_pool));
   }
 
   template <typename TValue>
   FORCE_INLINE bool add(const TValue& value) {
-    return add().set(value);
+    return addElement().set(value);
   }
 
   // add(char*) const
@@ -216,7 +256,26 @@ class JsonDocument : public Visitable {
   // add(const __FlashStringHelper*) const
   template <typename TChar>
   FORCE_INLINE bool add(TChar* value) {
-    return add().set(value);
+    return addElement().set(value);
+  }
+
+  FORCE_INLINE void remove(size_t index) {
+    _data.remove(index);
+  }
+  // remove(char*)
+  // remove(const char*)
+  // remove(const __FlashStringHelper*)
+  template <typename TChar>
+  FORCE_INLINE typename enable_if<IsString<TChar*>::value>::type remove(
+      TChar* key) {
+    _data.remove(adaptString(key));
+  }
+  // remove(const std::string&)
+  // remove(const String&)
+  template <typename TString>
+  FORCE_INLINE typename enable_if<IsString<TString>::value>::type remove(
+      const TString& key) {
+    _data.remove(adaptString(key));
   }
 
  protected:
