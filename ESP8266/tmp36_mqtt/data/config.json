@@ -1,9 +1,0 @@
-{
-    "ssid": "gopats",
-    "password":"15courthouselane",
-    "myhostname":"poovey",
-    "mqtt_server":"bigasspi",
-    "mqtt_port":1883,
-    "mqtt_clientid":"tmp36_mqtt_client",
-    "mqtt_channel":"/test/tmp36"
-}

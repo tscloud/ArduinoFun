@@ -1,9 +1,0 @@
-{
-    "ssid": "gopats",
-    "password":"15courthouselane",
-    "myhostname":"kreiger",
-    "mqtt_server":"bigasspi",
-    "mqtt_port":1883,
-    "mqtt_clientid":"therm_mqtt_client",
-    "mqtt_channel":"/test/thermistor"
-}

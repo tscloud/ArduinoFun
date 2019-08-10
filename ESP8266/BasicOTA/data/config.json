@@ -1,9 +1,0 @@
-{
-    "ssid": "gopats",
-    "password":"15courthouselane",
-    "myhostname":"mallory",
-    "mqtt_server":"bigasspi",
-    "mqtt_port":1883,
-    "mqtt_clientid":"htu21d_mqtt_client",
-    "mqtt_channel":"/test/htu21d"
-}
