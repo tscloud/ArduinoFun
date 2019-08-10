@@ -1,0 +1,9 @@
+{
+    "ssid": "gopats",
+    "password":"15courthouselane",
+    "myhostname":"dutchess",
+    "mqtt_server":"bigasspi",
+    "mqtt_port":1883,
+    "mqtt_clientid":"bme280_mqtt_client",
+    "mqtt_channel":"/test/bme280"
+}
