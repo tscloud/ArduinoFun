@@ -1,0 +1,138 @@
+RPi - various - take inventory!
+Chip - various - take inventory!
+
+Float Switch, side mounted horizontal (6) - Amazon
+Breadboard, mini, 170 pts (6) - Amazon
+Breadboard, 400 pts (4) - Amazon
+Breadboard, 830 pts (2) - Amazon
+Relay, DC -> AC, SSR-40DA (3), non-proto - Amazon
+Relay Interface Board, DC -> AC, SRD-05VDC-SL-C - Amazon
+Rotary Encoder, KY-040 (5) - Amazon
+Battery Holder, AA (12) - Amazon
+Battery Holder, 23A (10) - Amazon
+Battery Holder, 9V clip (10) - Amazon
+Battery Case, 8 x AA - Amazon
+USB Adapter, mini -> micro OTG (5) - Amazon
+Breadboard Power Supply, 3.3V/5V - Amazon
+FTDI Friend - Amazon
+DC Power Jack Adapter, screw terminal -> male (5)/female (5) - Amazon
+ESP8266 ESP-12E Development Board (2) - Amazon
+ESP8266 ESP-01S (2) - FBA_FZ1082 - Amazon
+nRF24L01+, (2) - Amazon
+Adapter Board, nRF24L01+ and ESP8266 ESP-01 - Amazon
+Adapter Board, nRF24L01+, 3.3V regulator (2) - Amazon
+7" Touchscreen Display Case - Amazon
+DisplayPort to Mini DisplayPort Male to Female Adapter - Amazon
+HDMI to DisplayPort Converter Adapter with USB Power - Amazon
+Wireless Network Adapter, 802.11 B/G/N, Wireless USB, high gain antenna, 2W - Amazon
+Wireless Network Adapter, 802.11 n/g/b, Wireless USB, high gain antenna - Amazon
+Wireless Network Adapter, 802.11 n/g/b, Wireless USB (4 Edimax, 1 Kootek) - Amazon
+Soldering Kit, Multi-Purpose Butane, Blazer SI-100CR Excalibur - Amazon
+Soldering Station, Weller WES51 Analog - Amazon
+Soldering Iron, Weller SP40NKUS Medium Duty LED - Amazon
+Solder, 44 Rosin Core 60/40,.031,1lb. Spool - Amazon
+Solder, 44 Rosin Core 63/37 .020" 3/4oz Kester Dispense-Pak - Amazon
+Solder Tip Tinner - Amazon
+Solder Iron Tips, ETA/B/C/AA/BB/CC/R/T/S/KN (10) - Amazon
+Soldering Iron Tip Cleaning Wire Sponge With Brass Ball - Amazon
+Desoldering Wick, 2.5mm Width, 5' Length - Amazon
+Solder Sucker - Amazon
+UHF female SO239 to MCX male right angle Adapter - Amazon
+SMA male to MCX male right Adapter - Amazon
+RF Upconverter For Software Defined Radio, Ham It Up v1.3 - Amazon
+Aluminum Enclosure Kit for Ham It Up v1.3 - Amazon
+SDR & DVB-T USB Stick (RTL2832 + R820T2) with Antenna and Remote Control - Amazon
+USB 3.0 TO SATA/IDE 2.5/3.5/5.25-INCH Hard Drive Converter - Amazon
+Coax wire cable stripping tool for RG-8, 9, 213, 214, LMR400 - Amazon
+Crimping Tool, dupont/molex/AWG 18-30 - Amazon
+Dupont Plastic Shell Pin (100) - Amazon
+28 AWG Hook-Up Wire, 25' (6) - Amazon
+30 AWG Wrapping Cable, 8 color, 200m - Amazon
+3" mini needlenose pliers - Amazon
+Wire Stripper, AWG 20-30 - Amazon
+Wire Stripper, crimper, AWG 10-24 - Amazon
+Optocoupler, transistor output, FOD852 (5) - Amazon
+Rocker Switch, SPST (5) - Amazon
+Slide Switch, Vertical, SPDT (10) - Amazon
+Toggle Switch, SPST (10) - Amazon
+Push Button, momentary, big red (10) - Amazon
+Push Button, momentary, mini black (100+5) - Amazon
+AD/DA Converter Module, I2C, PCF8591 - Amazon
+ADC, 8-Channel 10-Bit, MCP3008, SPI - Amazon
+LCD OLED Module, 128 x 64, yellow/blue, I2C, ssd1306 - Amazon
+LCD Module 20 x 4, White on Blue, HD44780 - Amazon
+GPS Breakout, Adafruit 746 - Amazon
+ATTINY85 (2) - Amazon
+USB PC remote control, Sanoxy - Amazon
+Prototype strip board, 4"x10", 4000 hole (2) - Amazon
+Prototype board, 4x6cm, 280 tin-plated holes (5) - Amazon
+Semiconductor Kit (320 Transistors & Diodes) - Amazon
+potentiometers, trimmer pots (15) (one each) 101(100Ω) - 504(500kΩ) - Amazon
+Bluetooth Receiver, HC-06, passcode 1234 - Amazon
+Bluetooth Adapter, Plugable USB Bluetooth 4.0 Low Energy - Amazon
+Bluetooth Adapter, Cirago USB Bluetooth BTA3210 v2.1 EDR Class 2 - Amazon
+DC-DC Buck Converter Breakout, 1.23V-30V, LM2596 - Amazon
+DC-DC Buck Converter, 12V -> 5V 3A - Amazon
+Fuse Holder, ATC blade inline (5) - Amazon
+Flex Cable for Raspberry Pi Camera - 24" / 610mm - Amazon
+Flex Cable for Raspberry Pi Camera - 4" / 100mm - Amazon
+3 Pins Poles PCB Screw Terminal Block Connector (5) - Amazon
+Ferrites, 13mm ID (5) - Amazon
+BMP180 Digital Barometric Pressure Sensor Breakout - Amazon
+HTU21D Humidity Sensor Breakout - Amazon
+Copper Heatsinks for Raspberry Pi and VGA RAM Memory Cooler (8) - Amazon
+LEDs, 5 Color Assorted, 5mm (25) - Amazon
+RPi breakout, w/ ribbon cable - Amazon
+RPi breakout, Pi Cobbler - Amazon
+RPi Camera, 5MP board - Amazon
+Coaxial Splitter, RCA DH24SPF Two Way 3 Ghz - Amazon
+RPi case, Blackberry (2) - Amazon
+MoCA Network Adapter, ECB2500C - Amazon
+eSATA cable, 6' - Amazon
+eSATA -> SATA cable, 3' - Amazon
+Hard Drive Encloser, aluminium, eSATA, USB 2.0 - Amazon
+BNC -> Banana plug/binding post adapter - Amazon
+Lexan sheet, 12" x 24" x 1/4" - Amazon
+Resistors, various (365) - Amazon
+Capacitor, various (100) - Amazon
+Capacitors, 0.1uF 50V Low Voltage Ceramic Disc (30) - Amazon
+Ring Terminal, crimp on (28) - Amazon
+Binding Post Connector, (10) - Amazon
+Cable Adapters, Micro USB OTG; Mini USB OTG; Micro USB Client; Mini USB Client; Micro HDMI to Full Sized HDMI - Amazon
+USB -> RJ45 Adapter - Amazon
+Multimeter, TekPower TP4000ZC - Amazon
+Multimeter, Pyle PDMT05 - Amazon
+Alligator Clips for Multimeter - Amazon
+Power Pole Connector, 45A pairs (8) - Amazon
+Power Pole Connector, 30A pairs (30) - Amazon
+Battery Bank, 15Ah 4.8A
+Sound Card, USB - Amazon
+HDMI Female - Female Coupler - Amazon
+HDMI Cable, 3' (2) - Amazon
+HDMI Cable, 6.5' - Amazon
+HDMI Cable, 6', ferite cores - Amazon
+HDMI -> VGA Adapter, Male - Female, active - Amazon
+Firewire Adapter, 4-pin Female -> 6-pin Male - Amazon
+Step Drillbit Set, for hard material - Amazon
+Coax Adapter, SMA Female -> UHF Male (2) - Amazon
+Coax Adapter, UHF Female -> RCA Male (2) - Amazon
+Shrink Wrap, tubing for wire (127) w/ case - Amazon
+Coax jumper, UHF-UHF, 6'/2'x2/9' - Amazon
+USB Extension Cable, USB A male -> USB A female - Amazon
+PS2 Keyboard -> USB Adapter - Amazon
+USB Female A To USB Mini Female B Adapter - Amazon
+15A Power Pole Connectors (4 Black, 4 Red) - Amazon
+30A Power Pole Connectors (4 Black, 4 Red) - Amazon
+DisplayPort Male -> VGA Female Adapter - Amazon
+RIGrunner 4005, DC patch panel - Amazon
+SE MZ101B Helping Hands with Magnifying Glass - Amazon
+Alligator Clip banana to banana Test Lead Cable 110cm lenght - Amazon
+Antenna, NAGOYA NA-701 DUAL BAND 144/430Mhz U/V SMA-F Antenna For Baofeng UV-5R KG-UVD1P - Amazon
+Programming Cable, USB, for Baofeng UV-5R/ Wouxun UVd1P/ UV6D - Amazon
+USB Hub, 7 Port High Speed USB 2.0, D-Link - Amazon
+USB Hub, 7 Port High Speed USB 2.0, Arkview - Amazon
+Mini Keyboard with Mouse Touchpad, Laser Pointer, FAVI FE01 2.4GHz Wireless USB - Amazon
+Mini Keyboard with Mouse Touchpad, Mini Slim RF Wireless - Amazon
+External Hard Drive Enclosure, Vantec NexStar SX NST-285S2-BK 2.5-Inch SATA to USB 2.0 - Amazon
+External Hard Drive Enclosure, Vantec NexStar SX NST-285U2-BK 2.5-Inch IDE to USB 2.0 - Amazon
+Thermometer, Scythe "Kama Thermo Mini" Super Compact, digital - Amazon
