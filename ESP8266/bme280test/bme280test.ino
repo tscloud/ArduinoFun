@@ -34,18 +34,18 @@ Adafruit_BME280 bme; // I2C
 unsigned long delayTime;
 
 void setup() {
-    Serial.begin(115200);
+    Serial.begin(9600);
     Serial.println(F("BME280 test"));
 
     bool status;
-    
+
     // default settings
     status = bme.begin();
     if (!status) {
         Serial.println("Could not find a valid BME280 sensor, check wiring!");
         while (1);
     }
-    
+
     Serial.println("-- Default Test --");
     delayTime = 1000;
 
@@ -53,7 +53,7 @@ void setup() {
 }
 
 
-void loop() { 
+void loop() {
     printValues();
     delay(delayTime);
 }

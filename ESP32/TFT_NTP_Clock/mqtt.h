@@ -18,7 +18,7 @@
 // MQTT defines
 #define MQTT_SERVER "bigasspi.fios-router.home"
 #define MQTT_CLIENT "ESP8266Client"
-#define MQTT_SUB "/home/basement/BME280"
+#define MQTT_SUB "/home/basement/BME680"
 
 // compensation factors - sensor too close to house?
 #define COMP_TEMP -7

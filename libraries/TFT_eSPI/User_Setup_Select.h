@@ -19,9 +19,9 @@
 
 // Only ONE line below should be uncommented.  Add extra lines and files as needed.
 
-#include <User_Setup.h>           // Default setup is root library folder
+//#include <User_Setup.h>           // Default setup is root library folder
 
-//#include <User_Setups/Setup1_ILI9341.h>  // Setup file configured for my ILI9341
+#include <User_Setups/Setup1_ILI9341.h>  // Setup file configured for my ILI9341
 //#include <User_Setups/Setup2_ST7735.h>   // Setup file configured for my ST7735
 //#include <User_Setups/Setup3_ILI9163.h>  // Setup file configured for my ILI9163
 //#include <User_Setups/Setup4_S6D02A1.h>  // Setup file configured for my S6D02A1
@@ -41,6 +41,8 @@
 //#include <User_Setups/Setup17_ePaper.h>            // Setup file for any Waveshare ePaper display
 //#include <User_Setups/Setup18_ST7789.h>            // Setup file configured for ST7789
 
+//#include <User_Setups/Setup19_RM68140_Parallel.h>	 // Setup file configured for RM68140 with parallel bus
+
 //#include <User_Setups/Setup20_ILI9488.h>           // Setup file for ESP8266 and ILI9488 SPI bus TFT
 //#include <User_Setups/Setup21_ILI9488.h>           // Setup file for ESP32 and ILI9488 SPI bus TFT
 
@@ -48,7 +50,9 @@
 //#include <User_Setups/Setup23_TTGO_TM.h>           // Setup file for ESP32 and TTGO TM ST7789 SPI bus TFT
 //#include <User_Setups/Setup24_ST7789.h>            // Setup file configured for ST7789 240 x 240
 
-//#include <User_Setups/Setup43_ST7735.h>              // Setup file configured for my ST7735S 80x160
+//#include <User_Setups/Setup43_ST7735.h>            // Setup file configured for my ST7735S 80x160
+
+//#include <User_Setups/Setup135_ST7789.h>           // Setup file for ESP8266 and ST7789 125 x 240 TFT
 
 //#include <User_Setups/SetupX_Template.h>
 
@@ -110,6 +114,9 @@
 #elif defined (ST7789_2_DRIVER)
      #include "TFT_Drivers/ST7789_2_Defines.h"
      #define  TFT_DRIVER 0x778B
+#elif defined (RM68140_DRIVER)
+	 #include "TFT_Drivers/RM68140_Defines.h"
+	 #define  TFT_DRIVER 0x6814
 #elif defined (XYZZY_DRIVER)  // <<<<<<<<<<<<<<<<<<<<<<<< ADD NEW DRIVER HERE
      #include "TFT_Drivers/XYZZY_Defines.h"
      #define  TFT_DRIVER 0x0000

@@ -18,7 +18,7 @@
 // MQTT defines
 #define MQTT_SERVER "bigasspi.fios-router.home"
 #define MQTT_CLIENT "ESP8266Client"
-#define MQTT_SUB "/home/basement/BME280"
+#define MQTT_SUB "/home/basement/BME680"
 
 // compensation factors - sensor too close to house?
 #define COMP_TEMP -7
@@ -54,6 +54,7 @@ void mqtt_setup() {
     Serial.println("connected");
 
     mqtt.subscribe(MQTT_SUB, topic_subscriber);
+    Serial.println("MQTT subscribe successful");
   } else {
     Serial.println(s+"failed, rc="+client.state());
   }
@@ -79,8 +80,9 @@ const char *getWeather(bool doPChange) {
   String presString = "";
   String presIndicator = "--";
 
+  Serial.println(s+"weather data 1: "+weatherData);
   if (weatherData.length() != 0) {
-    Serial.println(s+"weather data: "+weatherData);
+    Serial.println(s+"weather data 2: "+weatherData);
     // positions of each data type
     int tempLoc = weatherData.indexOf("T");
     int humLoc = weatherData.indexOf("H");
@@ -92,8 +94,8 @@ const char *getWeather(bool doPChange) {
     // format temp - apply compensation
     float tempFloat = round(tempString.toFloat()) + COMP_TEMP;
     tempString = String((int)tempFloat);
-    //tempString += char(96);// degree symbol
-    tempString += char(0x7E);// degree symbol
+    tempString += char(96);// degree symbol
+    //tempString += char(0x7E);// degree symbol
     // format humidity
     float humFloat = round(humString.toFloat());
     humString = String((int)humFloat);
@@ -131,8 +133,9 @@ const char *getWeather(bool doPChange) {
     Serial.println(s+"hum data: "+humString);
     Serial.println(s+"pres data: "+presString);
     tempString.toCharArray(buffer, tempString.length()+1);
-    return buffer;
+    //return buffer;
   }
+return buffer;
 }
 
 #endif

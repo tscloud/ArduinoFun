@@ -28,7 +28,7 @@
 Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C
 
 // used for wifi
-const char* ssid     = "gopats";
+const char* ssid     = "gosox";
 const char* password = "15courthouselane";
 const char* myhostname = "mallory";
 

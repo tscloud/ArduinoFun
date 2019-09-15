@@ -16,7 +16,7 @@
 // declare GUS base & sensors
 GUS_base *gus;
 // +++ references to sensors
-GUS_bme680 *sensor1; // sensor: BME680
+GUS_bme680 *sensor1;
 
 void setup() {
     Serial.begin(115200);

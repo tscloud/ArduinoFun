@@ -54,10 +54,12 @@ void setup(){
 void loop() {
   timeClient.update();
 
-  //Serial.println(timeClient.getFormattedTime());
+  Serial.println(timeClient.getFormattedTime());
 
   // check NTP and potentially update display
+  Serial.println("before getTime()...");
   getTime();
+  Serial.println("after getTime()...");
 
   // Do MQTT stuff we need to do in the loop()
   mqtt_loop();
@@ -108,8 +110,8 @@ void getTime() {
     tft.setTextSize(1);
     tft.setTextDatum(TC_DATUM); // Centre text on x,y position
     tft.drawString(getWeather(pChange), 160, 150, GFXFF);  // Draw the text string in the selected GFX free font
+    //tft.drawString(getWeather(pChange), 160, 150, 8);
     //tft.drawString(getTemp(), 160, 150, 4);  // Draw the text string in the selected GFX free font
-
   }
 
  }

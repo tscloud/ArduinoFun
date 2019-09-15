@@ -44,7 +44,7 @@ TFT_eSPI tft = TFT_eSPI();
 
 void setup(void) {
 
-  Serial.begin(250000);
+  Serial.begin(115200);
 
   tft.begin();
 

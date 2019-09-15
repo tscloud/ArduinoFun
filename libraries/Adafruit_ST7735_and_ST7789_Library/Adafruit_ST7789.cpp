@@ -51,9 +51,9 @@ static const uint8_t PROGMEM
   generic_st7789[] =  {                // Init commands for 7789 screens
     9,                              //  9 commands in list:
     ST77XX_SWRESET,   ST_CMD_DELAY, //  1: Software reset, no args, w/delay
-      150,                          //    150 ms delay
+      150,                          //     ~150 ms delay
     ST77XX_SLPOUT ,   ST_CMD_DELAY, //  2: Out of sleep mode, no args, w/delay
-      255,                          //     255 = 500 ms delay
+      10,                          //      10 ms delay
     ST77XX_COLMOD , 1+ST_CMD_DELAY, //  3: Set color mode, 1 arg + delay:
       0x55,                         //     16-bit color
       10,                           //     10 ms delay
@@ -74,7 +74,7 @@ static const uint8_t PROGMEM
     ST77XX_NORON  ,   ST_CMD_DELAY, //  8: Normal display on, no args, w/delay
       10,                           //     10 ms delay
     ST77XX_DISPON ,   ST_CMD_DELAY, //  9: Main screen turn on, no args, delay
-    255 };                          //     255 = max (500 ms) delay
+      10 };                          //    10 ms delay
 
 /**************************************************************************/
 /*!
@@ -101,9 +101,12 @@ void Adafruit_ST7789::init(uint16_t width, uint16_t height, uint8_t mode) {
 
   commonInit(NULL);
 
-  if ((width == 240) && (height == 240)) {
+  if ((width == 240) && (height == 240)) { // 1.3" and 1.54" displays
     _colstart = 0;
     _rowstart = 80;
+  } else if ((width == 135) && (height == 240)) { //1.13" display
+    _colstart = 53;
+    _rowstart = 40;
   } else {
     _colstart = 0;
     _rowstart = 0;
@@ -115,7 +118,11 @@ void Adafruit_ST7789::init(uint16_t width, uint16_t height, uint8_t mode) {
 
   displayInit(generic_st7789);
 
-  setRotation(0);
+  if ((width == 135) && (height == 240)) { 
+    setRotation(3);
+  } else {
+    setRotation(0);
+  }
 }
 
 /**************************************************************************/
@@ -146,15 +153,15 @@ void Adafruit_ST7789::setRotation(uint8_t m) {
      break;
   case 2:
      madctl  = ST77XX_MADCTL_RGB;
-     _xstart = 0;
-     _ystart = 0;
+     _xstart = _colstart;
+     _ystart = _rowstart;
      _width = WIDTH;
      _height = HEIGHT;
      break;
    case 3:
      madctl  = ST77XX_MADCTL_MX | ST77XX_MADCTL_MV | ST77XX_MADCTL_RGB;
-     _xstart = 0;
-     _ystart = 0;
+     _xstart = _rowstart;
+     _ystart = _colstart;
      _height = WIDTH;
      _width = HEIGHT;
      break;
